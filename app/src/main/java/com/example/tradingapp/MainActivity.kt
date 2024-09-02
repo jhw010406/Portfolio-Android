@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             TradingAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "okTHX",
+                        name = "test",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
