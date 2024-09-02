@@ -21,10 +21,7 @@ class MainActivity : ComponentActivity() {
             TradingAppTheme {
                 var test : Int
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "test",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    var test2:Int
                 }
             }
         }
