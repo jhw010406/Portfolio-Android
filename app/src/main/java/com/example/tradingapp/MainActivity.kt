@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TradingAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+                    var test2:Int
                 }
             }
         }
