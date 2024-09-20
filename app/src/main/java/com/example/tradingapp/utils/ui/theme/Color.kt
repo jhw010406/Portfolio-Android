@@ -1,4 +1,4 @@
-package com.example.tradingapp.ui.theme
+package com.example.tradingapp.utils.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
