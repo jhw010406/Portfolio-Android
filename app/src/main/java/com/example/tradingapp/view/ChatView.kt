@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-fun ChatScreen(
+fun ChatView(
 
 ){
     Text(text = "chat")
