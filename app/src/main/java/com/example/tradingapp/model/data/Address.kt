@@ -1,6 +1,6 @@
 package com.example.tradingapp.model.data
 
-class Address (
+data class Address (
     // -도
     val state : String?,
     // -시
