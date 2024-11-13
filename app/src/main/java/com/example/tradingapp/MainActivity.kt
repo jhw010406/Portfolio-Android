@@ -1,20 +1,21 @@
 package com.example.tradingapp
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.tradingapp.utils.ui.theme.TradingAppTheme
-import com.example.tradingapp.view.MainView
+import com.example.tradingapp.view.graph.MainNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,16 +32,10 @@ class MainActivity : ComponentActivity() {
                             .consumeWindowInsets(innerPadding),
                         color = Color(0xFF212123)
                     ){
-                        MainView()
+                        MainNavGraph()
                     }
                 }
             }
         }
-    }
-
-    @Preview
-    @Composable
-    fun PreviewApp(){
-        MainView()
     }
 }
