@@ -10,12 +10,15 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.example.tradingapp.BuildConfig
 import com.example.tradingapp.model.data.post.Image
+import com.example.tradingapp.model.data.post.ImageForGet
+import com.example.tradingapp.model.data.post.ImageForUpdate
 import com.example.tradingapp.model.data.request.RequestBodyFromContentURI
 import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.post.PostDetailsTrading
 import com.example.tradingapp.model.repository.ImageDataRepository
 import com.example.tradingapp.model.repository.PostDataRepository
+import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
 
 class WritePostForTradingViewModel(
     val title: MutableState<String> = mutableStateOf(""),
@@ -27,10 +30,37 @@ class WritePostForTradingViewModel(
     val acceptFreebieRequest: MutableState<Boolean> = mutableStateOf(false),
     val selectedImages: SnapshotStateList<Image> = mutableStateListOf()
 ) : ViewModel(){
-    var tag : String = ""
+    var isForUpdate = mutableStateOf(false)
+    var postId : Int? = null
     var productPriceInt : Int = 0
 
+    fun setInitialValues(
+        postId: Int,
+        title : String,
+        content : String,
+        productPriceInt : Int,
+        productImages : List<ImageForGet>
+    ) {
+        this.isForUpdate.value = true
+        this.postId = postId
+        this.title.value = title
+        this.content.value = content
+        this.productPrice.value = addDelimiterToPrice(productPriceInt.toString())
+        this.productPriceInt = productPriceInt
+        productImages.forEach { image ->
+            this.selectedImages.add(
+                Image(
+                    postId = postId,
+                    imageNumber = image.imageNumber,
+                    name = image.name,
+                    url = image.url
+                )
+            )
+        }
+    }
+
     fun uploadPostForTrading(
+        tag : String,
         posterUID : Int,
         callback : (Boolean) -> Unit
     ) {
@@ -44,28 +74,15 @@ class WritePostForTradingViewModel(
 
         PostDataRepository.uploadPost(
             inputPostDetails = PostDetails(
-                postID = 0,
                 posterUID = posterUID,
-                posterID = null,
                 category = PostCategories.TRADING.value,
-                thumbnailImageUrl = null,
                 title = title.value,
                 content = content.value,
-                viewCount = 0,
-                uploadDate = null,
-                modifyDate = null,
-                location = null,
                 postDetailsTrading = PostDetailsTrading(
                     productImagesForUpload = imageList,
-                    productImagesForGet = null,
                     productType = "물건 종류",
                     productPrice = productPriceInt,
-                    modelYear = null,
-                    mileage = null,
-                    chatCount = 0,
-                    favoriteCount = 0
-                ),
-                postDetailsCommunity = null
+                )
             )
         ){ responseCode ->
             when (responseCode / 100) {
@@ -76,6 +93,39 @@ class WritePostForTradingViewModel(
                     callback(false)
                 }
             }
+        }
+    }
+
+    fun updatePostForTrading(
+        tag : String,
+        postId : Int,
+        posterUID : Int,
+        callback : (Boolean) -> Unit
+    ) {
+        val imageList = mutableListOf<ImageForUpdate>()
+
+        selectedImages.forEachIndexed() { index, image ->
+            imageList.add(ImageForUpdate(image.postId, image.name, image.url, index))
+            Log.d(tag, imageList[index].toString())
+        }
+
+        PostDataRepository.updatePost(
+            tag = tag,
+            inputUserUid = posterUID,
+            inputPostDetails = PostDetails(
+                postID = postId,
+                posterUID = posterUID,
+                category = PostCategories.TRADING.value,
+                title = title.value,
+                content = content.value,
+                postDetailsTrading = PostDetailsTrading(
+                    productImagesForUpdate = imageList,
+                    productType = "물건 종류",
+                    productPrice = productPriceInt
+                )
+            )
+        ){ isSuccessful ->
+            callback(isSuccessful)
         }
     }
 
@@ -103,11 +153,13 @@ class WritePostForTradingViewModel(
                         title.value.isNotBlank() &&
                         selectedImages.isNotEmpty() &&
                         content.value.isNotBlank() &&
-                        productPrice.value.isNotBlank()
+                        productPrice.value.isNotBlank() &&
+                        productPriceInt > 0
                 )
     }
 
     fun addImageToList(
+        tag : String,
         inputUri : Uri,
         context : Context,
         currentImagesCount : Int,
@@ -128,7 +180,7 @@ class WritePostForTradingViewModel(
             BuildConfig.STORAGE_ADDRESS,
             requestBody,
             true,
-            0
+            postId?:0
         )
 
         Log.d(tag, "input URI : ${inputUri}")
@@ -138,6 +190,7 @@ class WritePostForTradingViewModel(
 
             ImageDataRepository.getImagePreSignedURL(
                 tag,
+                postId?:0,
                 image.name,
                 image.contentType!!
             ) { getImage, getURLSucceed ->
@@ -177,16 +230,25 @@ class WritePostForTradingViewModel(
     }
 
     fun deleteImageFromList(
+        tag : String,
+        isForUpdate : Boolean,
         inputImage : Image,
         callback: (Boolean) -> Unit
     ) {
-        ImageDataRepository.deletePostImage(tag, inputImage.name){ isSuccessful ->
-            if (isSuccessful){
-                selectedImages.remove(inputImage)
-                callback(true)
-            }
-            else{
-                callback(false)
+
+        if (isForUpdate) {
+            selectedImages.remove(inputImage)
+            callback(true)
+        }
+        else {
+            ImageDataRepository.deletePostImage(tag, inputImage.name){ isSuccessful ->
+                if (isSuccessful){
+                    selectedImages.remove(inputImage)
+                    callback(true)
+                }
+                else{
+                    callback(false)
+                }
             }
         }
     }

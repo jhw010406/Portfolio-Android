@@ -26,6 +26,17 @@ interface PostDataRequest{
         @Body postDetails : PostDetails
     ) : Call<Unit>
 
+    @POST("update-post")
+    fun updatePost(
+        @Query("user-uid") userUid : Int,
+        @Body postDetails: PostDetails
+    ) : Call<Unit>
+
+    @DELETE("post")
+    fun deletePost(
+        @Query("post-id") postId: Int
+    ) : Call<Unit>
+
     @GET("posts-list/{category}")
     fun getPreviewPostsList(
         @Path("category") postCategory : Int,
@@ -114,6 +125,62 @@ object PostDataRepository {
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 Log.e("POST", "server connect failure", t)
                 callback(500)
+            }
+        })
+    }
+
+    fun updatePost(
+        tag : String,
+        inputUserUid : Int,
+        inputPostDetails : PostDetails,
+        callback : (Boolean) -> Unit
+    ) {
+        Log.d(tag, "${inputPostDetails}")
+        val updatePost = retrofit.updatePost(inputUserUid, inputPostDetails)
+
+        updatePost.enqueue(object : Callback<Unit>{
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+
+                if (response.isSuccessful) {
+                    Log.d(tag, "update post succeed")
+                    callback(true)
+                }
+                else {
+                    Log.e(tag, "server error : ${response.code()}")
+                    callback(false)
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                Log.e(tag, "server connect failure")
+                callback(false)
+            }
+        })
+    }
+
+    fun deletePost(
+        tag : String,
+        postId : Int,
+        callback: (Boolean) -> Unit
+    ) {
+        val deletePost = retrofit.deletePost(postId)
+
+        deletePost.enqueue(object : Callback<Unit>{
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+
+                if (response.isSuccessful) {
+                    Log.d(tag, "delete post ${postId} succeed")
+                    callback(true)
+                }
+                else {
+                    Log.e(tag, "server error : ${response.code()}")
+                    callback(false)
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                Log.e(tag, "server connect failure", t)
+                callback(false)
             }
         })
     }

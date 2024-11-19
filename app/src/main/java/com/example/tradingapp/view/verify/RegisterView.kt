@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,27 +78,24 @@ fun RegisterView(
             Column (horizontalAlignment = Alignment.Start){
                 OutlinedTextField(
                     value = inputID,
-                    placeholder = {
-                        Text(
-                            text = "ID 입력",
-                            color = Color.White
-                        )
-                    },
+                    placeholder = { Text(text = "ID 입력", color = Color.White) },
+                    textStyle = TextStyle(color = Color.White),
+                    colors = TextFieldDefaults.colors(
+                        cursorColor = Color.White,
+                        unfocusedContainerColor = Color(0x00000000),
+                        focusedContainerColor = Color(0x00000000),
+                        unfocusedIndicatorColor = Color(0xFF636365),
+                        focusedIndicatorColor = Color.White
+                    ),
                     singleLine = true,
-                    onValueChange = { input ->
-                        if (restrictInputID(input)){
-                            inputID = input
-                        }
-                    }
+                    onValueChange = { input -> if (restrictInputID(input)){ inputID = input } }
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                     text = noticeRequirementsText[0][isWrongInputID],
                     fontSize = 14.sp,
                     color = noticeRequirementsColor[isWrongInputID],
-                    modifier = Modifier
-                        .width(280.dp)
-                        .wrapContentHeight()
+                    modifier = Modifier.width(280.dp).wrapContentHeight()
                 )
             }
             Spacer(modifier = Modifier.size(36.dp))
@@ -104,27 +104,24 @@ fun RegisterView(
             Column (horizontalAlignment = Alignment.Start){
                 OutlinedTextField(
                     value = inputPW,
-                    placeholder = {
-                        Text(
-                            text = "비밀번호 입력",
-                            color = Color.White
-                        )
-                    },
+                    placeholder = { Text(text = "비밀번호 입력", color = Color.White) },
+                    textStyle = TextStyle(color = Color.White),
+                    colors = TextFieldDefaults.colors(
+                        cursorColor = Color.White,
+                        unfocusedContainerColor = Color(0x00000000),
+                        focusedContainerColor = Color(0x00000000),
+                        unfocusedIndicatorColor = Color(0xFF636365),
+                        focusedIndicatorColor = Color.White
+                    ),
                     singleLine = true,
-                    onValueChange = { input ->
-                        if (restrictInputPW(input)){
-                            inputPW = input
-                        }
-                    }
+                    onValueChange = { input -> if (restrictInputPW(input)){ inputPW = input } }
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                     text = noticeRequirementsText[1][isWrongInputPW],
                     fontSize = 14.sp,
                     color = noticeRequirementsColor[isWrongInputPW],
-                    modifier = Modifier
-                        .width(280.dp)
-                        .wrapContentHeight()
+                    modifier = Modifier.width(280.dp).wrapContentHeight()
                 )
             }
             Spacer(modifier = Modifier.size(40.dp))
@@ -138,20 +135,11 @@ fun RegisterView(
                         if (CheckRightID(inputID) && CheckRightPW(inputPW)) {
                             isWrongInputID = 0
                             isWrongInputPW = 0
-                            loginViewModel.Register(tag, inputID, inputPW) { getUserCertificate, isSuccessful ->
+                            loginViewModel.Register(tag, inputID, inputPW) { getUserInformation, isSuccessful ->
 
                                 // register success
                                 if (isSuccessful) {
-                                    myInfo.userInfo.value = UserInformation(
-                                        loginViewModel.myCertificate!!.uid,
-                                        loginViewModel.myCertificate!!.id,
-                                        loginViewModel.myCertificate!!.password,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null
-                                    )
+                                    myInfo.userInfo.value = getUserInformation
                                     mainNavController.navigate(HomeNavigationGraph.HOME.name) {
                                         popUpTo(MainNavigationGraph.LOGIN.name) {
                                             inclusive = true
@@ -166,17 +154,12 @@ fun RegisterView(
                                 }
                             }
                         } else {
-                            if (CheckRightID(inputID)) {
-                                isWrongInputID = 0
-                            } else {
-                                isWrongInputID = 1
-                            }
 
-                            if (CheckRightPW(inputPW)) {
-                                isWrongInputPW = 0
-                            } else {
-                                isWrongInputPW = 1
-                            }
+                            if (CheckRightID(inputID)) { isWrongInputID = 0 }
+                            else { isWrongInputID = 1 }
+
+                            if (CheckRightPW(inputPW)) { isWrongInputPW = 0 }
+                            else { isWrongInputPW = 1 }
                         }
                     },
                 shape = RoundedCornerShape(12),

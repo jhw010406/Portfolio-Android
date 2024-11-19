@@ -1,5 +1,9 @@
 package com.example.tradingapp.view.post.trading
 
+import android.os.Build
+import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,48 +45,65 @@ import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.viewmodel.post.getPostsList
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.user.UserInformation
+import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
 import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
-import com.example.tradingapp.model.viewmodel.post.MyPostsListViewModel
-import com.example.tradingapp.model.viewmodel.post.PreviewPostForTrading
+import com.example.tradingapp.model.viewmodel.post.UserPostsListViewModel
+import com.example.tradingapp.view.LoadingBar
+import com.example.tradingapp.view.LoadingView
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UserPostsListView(
     tag : String,
+    isMyPostsList : Boolean,
+    myInfo : UserInformation,
     userId : String?,
     userUid : Int?,
-    myPostsListViewModel : MyPostsListViewModel = viewModel(),
-    mainNavController : NavHostController,
-    selectedPost : (PostDetails) -> Unit
+    userPostsListViewModel : UserPostsListViewModel = viewModel(),
+    mainNavController : NavHostController
 ) {
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF212123))
-    ) {
-        MyPostsListHeader()
+    val backStackEntryId = userPostsListViewModel.backStackEntryId.value
 
-        MyPostsListProfile(userId, mainNavController)
-
+    if (backStackEntryId == null) {
+        LoadingView()
+        userPostsListViewModel.backStackEntryId.value = mainNavController.currentBackStackEntry?.id
+    }
+    else {
         Column (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF212123))
         ) {
-            Row ( horizontalArrangement = Arrangement.Center) {
-                Text(text = "판매중", fontWeight = FontWeight.SemiBold, color = Color.White)
-            }
+            UserPostsListHeader(mainNavController = mainNavController)
 
-            MyPostsList(tag, userUid, myPostsListViewModel){ getPostDetails ->
-                selectedPost(getPostDetails)
+            UserPostsListProfile(isMyPostsList, userId, mainNavController)
+
+            Column (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row ( horizontalArrangement = Arrangement.Center) {
+                    Text(text = "판매중", fontWeight = FontWeight.SemiBold, color = Color.White)
+                }
+
+                UserPostsList(
+                    tag,
+                    backStackEntryId,
+                    myInfo,
+                    userUid,
+                    userPostsListViewModel,
+                    mainNavController
+                )
             }
         }
-
     }
 }
 
 @Composable
-fun MyPostsListHeader(
+fun UserPostsListHeader(
     barColor : Color = Color(0xFF212123),
-    dividerColor : Color = Color(0xFF636365)
+    dividerColor : Color = Color(0xFF636365),
+    mainNavController : NavHostController
 ){
     Column {
         Surface(
@@ -100,10 +121,7 @@ fun MyPostsListHeader(
             ){
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                    modifier = Modifier
-                        .clickable {
-                            //navController.popBackStack()
-                        },
+                    modifier = Modifier.clickable { mainNavController.popBackStack() },
                     tint = Color.White,
                     contentDescription = "back",
                 )
@@ -118,11 +136,12 @@ fun MyPostsListHeader(
 }
 
 @Composable
-fun MyPostsListProfile(
+fun UserPostsListProfile(
+    isMyPostsList : Boolean,
     userId: String?,
     mainNavController: NavHostController
 ) {
-    val targetID = userId ?: "나"
+    val targetID = if (isMyPostsList) { "나" } else { userId }
 
     Row (
         modifier = Modifier
@@ -135,7 +154,7 @@ fun MyPostsListProfile(
             Text(text = "${targetID}의 판매내역", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
             Spacer(modifier = Modifier.size(12.dp))
 
-            if (userId == null){
+            if (isMyPostsList){
                 Surface (
                     modifier = Modifier
                         .clickable { mainNavController.navigate(MainNavigationGraph.WRITEPOSTFORTRADING.name) },
@@ -162,50 +181,51 @@ fun MyPostsListProfile(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MyPostsList(
+fun UserPostsList(
     tag : String,
+    backStackEntryId : String,
+    myInfo: UserInformation,
     userUid : Int?,
-    myPostsListViewModel : MyPostsListViewModel,
-    selectedPost : (PostDetails) -> Unit
+    userPostsListViewModel : UserPostsListViewModel,
+    mainNavController : NavHostController
 ){
     val pageCount = 10
-    var postsList by rememberSaveable {
-        mutableStateOf(myPostsListViewModel.tradingPostsList.toList())
-    }
-    val needMoreLoadPosts by remember(myPostsListViewModel.startLoadingPostNumber) {
+    var postsList by rememberSaveable { mutableStateOf(userPostsListViewModel.tradingPostsList.toList()) }
+    val needMoreLoadPosts by remember(userPostsListViewModel.startLoadingPostNumber) {
         derivedStateOf {
-            if (myPostsListViewModel.tradingPostsList.isNotEmpty()){
-                myPostsListViewModel.lazyListState.value.firstVisibleItemIndex >= myPostsListViewModel.startLoadingPostNumber
+            if (userPostsListViewModel.tradingPostsList.isNotEmpty()){
+                userPostsListViewModel.lazyListState.value.firstVisibleItemIndex >= userPostsListViewModel.startLoadingPostNumber
             }
-            else{
-                true
-            }
+            else{ true }
         }
     }
+
 
     LaunchedEffect (needMoreLoadPosts){
         getPostsList(
             tag,
             PostCategories.TRADING.value,
-            myPostsListViewModel.startPageNumber,
+            userPostsListViewModel.startPageNumber,
             pageCount,
             userUid,
-            myPostsListViewModel.tradingPostsList,
+            userPostsListViewModel.tradingPostsList,
             false
         ) { isSuccessful ->
 
             if (isSuccessful){
-                postsList = myPostsListViewModel.tradingPostsList.toList()
-                myPostsListViewModel.startPageNumber = myPostsListViewModel.tradingPostsList.size
-                myPostsListViewModel.startLoadingPostNumber += myPostsListViewModel.tradingPostsList.size / 2
+                postsList = userPostsListViewModel.tradingPostsList.toList()
+                userPostsListViewModel.startPageNumber = userPostsListViewModel.tradingPostsList.size
+                userPostsListViewModel.startLoadingPostNumber += userPostsListViewModel.tradingPostsList.size / 2
             }
         }
     }
 
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        state = myPostsListViewModel.lazyListState.value
+        state = userPostsListViewModel.lazyListState.value
     ) {
         itemsIndexed(
             items = postsList,
@@ -220,8 +240,18 @@ fun MyPostsList(
                 )
             }
 
-            PreviewPostForTrading(tag = tag, previewPost = post) { getSelectedPostDetails ->
-                selectedPost(getSelectedPostDetails)
+            PreviewTradingPost(
+                tag = tag,
+                myInfo = myInfo,
+                previewPost = post
+            ) { selectedPostId ->
+
+                mainNavController.currentBackStackEntry?.savedStateHandle?.set("post_id", selectedPostId)
+                MainNavGraphClickListener.navigate(
+                    backStackEntryId,
+                    MainNavigationGraph.TRADINGPOST.name,
+                    mainNavController
+                )
             }
         }
     }

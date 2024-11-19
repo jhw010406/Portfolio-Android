@@ -18,6 +18,7 @@ import retrofit2.http.Url
 interface ImageRequestToServer {
     @GET("post-image")
     fun getImagePreSignedURL(
+        @Query("post-id") postId: Int,
         @Query("filename") filename : String,
         @Query("contentType") contentType : String
     ) : Call<Image>
@@ -38,16 +39,17 @@ interface ImageRequestToStorage {
 
 object ImageDataRepository{
 
-    val serverRetrofit = BaseRetrofit.retrofit.create(ImageRequestToServer::class.java)
-    val storageRetrofit = ImageBaseRetrofit.retrofit.create(ImageRequestToStorage::class.java)
+    private val serverRetrofit: ImageRequestToServer = BaseRetrofit.retrofit.create(ImageRequestToServer::class.java)
+    private val storageRetrofit: ImageRequestToStorage = ImageBaseRetrofit.retrofit.create(ImageRequestToStorage::class.java)
 
     fun getImagePreSignedURL (
         tag : String,
+        inputPostId : Int,
         inputFilename : String,
         inputContentType : String,
         callback : (Image?, Boolean) -> Unit
     ) {
-        val getPreSignedURL = serverRetrofit.getImagePreSignedURL(inputFilename, inputContentType)
+        val getPreSignedURL = serverRetrofit.getImagePreSignedURL(inputPostId, inputFilename, inputContentType)
 
         getPreSignedURL.enqueue(object : Callback<Image>{
             override fun onResponse(call: Call<Image>, response: Response<Image>) {
@@ -76,7 +78,7 @@ object ImageDataRepository{
     ) {
         val putImageData = storageRetrofit.putImageData(
             preSignedURL = inputImage.preSignedUrl,
-            imageFile = inputImage.file
+            imageFile = inputImage.file!!
         )
         Log.d(tag, inputImage.preSignedUrl)
 

@@ -35,28 +35,22 @@ class LoginViewModel(
         }
     }
 
-    fun Login(
+    fun login(
         tag : String,
         id : String,
         password : String,
         keepLogin : Boolean,
         callback : (UserInformation?, Boolean) -> Unit
     ) {
-        UserDataRepository.LoginUser(tag, id, password){ getUserCertificate, getUserInformation, isSuccessful ->
+        UserDataRepository.loginUser(tag, id, password){ getUserCertificate, getUserInformation, isSuccessful ->
 
             if (isSuccessful) {
                 myCertificate = getUserCertificate
-
-                if (myCertificate != null) {
-                    myCertificate!!.keepLogin = keepLogin
-                    viewModelScope.launch {
-                        localUserCertificateRepository.insert(myCertificate!!)
-                    }
-                    callback(getUserInformation, true)
+                myCertificate!!.keepLogin = keepLogin
+                viewModelScope.launch {
+                    localUserCertificateRepository.insert(myCertificate!!)
                 }
-                else {
-                    callback(null, false)
-                }
+                callback(getUserInformation, true)
             }
             else {
                 callback(null, false)
@@ -68,22 +62,20 @@ class LoginViewModel(
         tag : String,
         id : String,
         password : String,
-        callback : (UserCertificate?, Boolean) -> Unit
+        callback : (UserInformation?, Boolean) -> Unit
     ) {
-        UserDataRepository.RegisterUser(tag, id, password){ getUserCertificate, isSuccessful ->
+        UserDataRepository.RegisterUser(
+            tag,
+            UserCertificate(id, password, false, null, null)
+        ){ getUserCertificate, getUserInformation, isSuccessful ->
 
             if (isSuccessful) {
                 myCertificate = getUserCertificate
 
-                if (myCertificate != null) {
-                    viewModelScope.launch {
-                        localUserCertificateRepository.insert(myCertificate!!)
-                    }
-                    callback(getUserCertificate, true)
+                viewModelScope.launch {
+                    localUserCertificateRepository.insert(getUserCertificate)
                 }
-                else {
-                    callback(null, false)
-                }
+                callback(getUserInformation, true)
             }
             else {
                 callback(null, false)

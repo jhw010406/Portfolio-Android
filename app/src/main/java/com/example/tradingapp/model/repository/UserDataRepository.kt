@@ -26,16 +26,15 @@ interface UserInfoRequest {
     @POST("register")
     fun RegisterUser(
         @Body userCertificate : UserCertificate
-    ) : Call<UserCertificate>
+    ) : Call<UserInformation>
 }
 
 object UserDataRepository{
 
     // create : 주어진 service 기능을 수행하는 retrofit 객체 생성
-    val retrofit : UserInfoRequest = LoginRetrofit.retrofit.create(UserInfoRequest::class.java)
-    val localUserCertificateRepository : LocalUserCertificateRepository = LocalUserCertificateGraph.localUserCertificateRepository
+    private val retrofit : UserInfoRequest = LoginRetrofit.retrofit.create(UserInfoRequest::class.java)
 
-    fun LoginUser(
+    fun loginUser(
         tag : String,
         id : String,
         password : String,
@@ -94,49 +93,48 @@ object UserDataRepository{
 
     fun RegisterUser(
         tag : String,
-        id : String,
-        password: String,
-        callback: (UserCertificate?, Boolean) -> Unit
+        userCertificate : UserCertificate,
+        callback: (UserCertificate, UserInformation?, Boolean) -> Unit
     ) {
-        val createUserInfo = retrofit.RegisterUser(UserCertificate(id, password, false, null, null))
+        val createUserInfo = retrofit.RegisterUser(userCertificate)
 
-        createUserInfo.enqueue(object : Callback<UserCertificate>{
-            override fun onResponse(call: Call<UserCertificate>, response: Response<UserCertificate>) {
+        createUserInfo.enqueue(object : Callback<UserInformation>{
+            override fun onResponse(call: Call<UserInformation>, response: Response<UserInformation>) {
                 if (response.isSuccessful){
 
                     response.headers()["Authorization"]?.let {
 
                         if (it.startsWith("Bearer ")) {
-                            response.body()?.accessToken = it.substring(7)
+                            userCertificate.accessToken = it.substring(7)
                         }
                     }
 
                     response.headers()["Refresh-Token"]?.let {
 
                         if (it.startsWith("Bearer ")) {
-                            response.body()?.refreshToken = it.substring(7)
+                            userCertificate.refreshToken = it.substring(7)
                         }
                     }
 
-                    if (response.body()?.accessToken == null || response.body()?.refreshToken == null) {
+                    if (userCertificate.accessToken == null || userCertificate.refreshToken == null) {
                         Log.e(tag, "access token or refresh token is null")
-                        callback(null, false)
+                        callback(userCertificate, null, false)
 
                         return
                     }
 
                     Log.d(tag, "register success | ${response.body()} | ${response.body()?.uid}")
-                    callback(response.body(), true)
+                    callback(userCertificate, response.body(), true)
                 }
                 else{
                     Log.d(tag, "error : ${response.code()} ${response.message()}")
-                    callback(null, false)
+                    callback(userCertificate, null, false)
                 }
             }
 
-            override fun onFailure(call: Call<UserCertificate>, t: Throwable) {
+            override fun onFailure(call: Call<UserInformation>, t: Throwable) {
                 Log.d(tag, "server connect failure", t)
-                callback(null, false)
+                callback(userCertificate, null, false)
             }
         })
     }

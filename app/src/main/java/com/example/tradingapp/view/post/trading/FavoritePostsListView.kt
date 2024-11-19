@@ -1,6 +1,8 @@
 package com.example.tradingapp.view.post.trading
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,33 +39,44 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.tradingapp.R
+import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.data.post.PostDetails
-import com.example.tradingapp.model.viewmodel.post.PreviewPostForTrading
+import com.example.tradingapp.model.data.user.UserInformation
+import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
+import com.example.tradingapp.model.viewmodel.post.FavoritePostsListViewModel
 import com.example.tradingapp.model.viewmodel.post.getPostsList
+import com.example.tradingapp.view.LoadingView
 
-@Preview
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FavoritePostsListView(
     tag : String,
-    myUid : Int,
+    myInfo : UserInformation,
     mainNavController: NavHostController,
-    selectedPostDetails : (PostDetails) -> Unit
+    favoritePostsListViewModel: FavoritePostsListViewModel = viewModel()
 ) {
+    val backStackEntryId = favoritePostsListViewModel.backStackEntryId.value
 
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF212123))
-    ) {
-        FavoritePostsListViewHeader(mainNavController = mainNavController)
+    if (backStackEntryId == null) {
+        LoadingView()
+        favoritePostsListViewModel.backStackEntryId.value = mainNavController.currentBackStackEntry?.id
+    }
+    else {
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF212123))
+        ) {
+            FavoritePostsListViewHeader(mainNavController = mainNavController)
 
-        FavoritePostsListViewBody(
-            tag = tag,
-            modifier = Modifier.weight(1f),
-            myUid = myUid
-        ) { getPostDetails ->
-            selectedPostDetails(getPostDetails)
+            FavoritePostsListViewBody(
+                tag = tag,
+                modifier = Modifier.weight(1f),
+                backStackEntryId = backStackEntryId,
+                mainNavController = mainNavController,
+                myInfo = myInfo
+            )
         }
     }
 }
@@ -102,18 +116,21 @@ fun FavoritePostsListViewHeader(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FavoritePostsListViewBody(
     tag : String,
     modifier: Modifier,
-    myUid : Int,
-    selectedPostDetails : (PostDetails) -> Unit
+    backStackEntryId : String,
+    myInfo: UserInformation,
+    mainNavController: NavHostController
 ) {
     val pageCount = 10
     val getFavoritePostsList : MutableList<PostDetails> = mutableListOf()
     val lazyListState : LazyListState = rememberLazyListState()
     var favoritePostsList by rememberSaveable { mutableStateOf<List<PostDetails>>(listOf()) }
-    var needLoadMorePosts by rememberSaveable { mutableStateOf(true) }
+    val needLoadMorePosts by rememberSaveable { mutableStateOf(true) }
+
 
     LaunchedEffect (needLoadMorePosts) {
 
@@ -123,7 +140,7 @@ fun FavoritePostsListViewBody(
                 PostCategories.TRADING.value,
                 favoritePostsList.size,
                 pageCount,
-                myUid,
+                myInfo.uid,
                 getFavoritePostsList,
                 true
             ) { isSuccessful ->
@@ -136,6 +153,7 @@ fun FavoritePostsListViewBody(
         }
     }
 
+
     LazyColumn (
         modifier = modifier.fillMaxSize(),
         state = lazyListState
@@ -144,8 +162,18 @@ fun FavoritePostsListViewBody(
             items = favoritePostsList,
             key = { index, post -> index }
         ) { index, post ->
-            PreviewPostForTrading(tag = tag, previewPost = post) { getPostDetails ->
-                selectedPostDetails(getPostDetails)
+            PreviewTradingPost(
+                tag = tag,
+                myInfo = myInfo,
+                previewPost = post
+            ) { selectedPostId ->
+
+                mainNavController.currentBackStackEntry?.savedStateHandle?.set("post_id", selectedPostId)
+                MainNavGraphClickListener.navigate(
+                    backStackEntryId,
+                    MainNavigationGraph.TRADINGPOST.name,
+                    mainNavController
+                )
             }
         }
     }

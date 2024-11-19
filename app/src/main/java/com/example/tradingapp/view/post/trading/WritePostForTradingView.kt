@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,7 +41,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -61,52 +67,94 @@ import coil.compose.AsyncImage
 import com.example.tradingapp.R
 import com.example.tradingapp.model.data.post.Image
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
+import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.viewmodel.post.WritePostForTradingViewModel
 import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
 import com.example.tradingapp.model.viewmodel.other.selectOptimalContractForMedia
+import com.example.tradingapp.model.viewmodel.post.getSelectedPostDetails
+import com.example.tradingapp.view.LoadingView
 
 @Composable
-fun WritePostForTradingScreen(
+fun WritePostForTradingView(
     tag : String,
+    isForUpdate: Boolean,
     myUID : Int,
-    writePostForTradingViewModel : WritePostForTradingViewModel = viewModel(),
+    writePostForTradingViewModel : WritePostForTradingViewModel,
     mainNavController : NavHostController
 ){
-    writePostForTradingViewModel.tag = tag
+    var loadedPostDetails by rememberSaveable { mutableStateOf(false) }
+    val postId = writePostForTradingViewModel.postId!!
 
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFF212123))
-    ){
-        LazyColumn ( modifier = Modifier.weight(1f) ) {
-            // header
-            item {
-                WritePostForTradingScreenHeader(mainNavController)
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 0.dp),
-                    color = Color(0xFF636365)
-                )
-            }
+    BackHandler {
+        mainNavController.previousBackStackEntry?.savedStateHandle?.remove<PostDetails>("post-details")
+        mainNavController.popBackStack()
+    }
 
-            // body
-            item {
-                WritePostForTradingScreenBody(writePostForTradingViewModel)
+    LaunchedEffect(Unit) {
+
+        if (!loadedPostDetails) {
+
+            if (isForUpdate) {
+                getSelectedPostDetails(tag, postId) { getPostDetails, isSuccessful ->
+
+                    if (isSuccessful) {
+                        getPostDetails?.let {
+                            writePostForTradingViewModel.setInitialValues(
+                                it.postID,
+                                it.title,
+                                it.content!!,
+                                it.postDetailsTrading!!.productPrice,
+                                it.postDetailsTrading.productImagesForGet!!
+                            )
+                        }
+                    }
+
+                    loadedPostDetails = true
+                }
             }
         }
+    }
 
-        // footer
-        Surface (
+    if (isForUpdate && !loadedPostDetails) {
+        LoadingView()
+    }
+    else {
+        Column (
             modifier = Modifier
-                .padding(horizontal = 12.dp),
-            color = Color(0xFF212123)
+                .fillMaxSize()
+                .background(color = Color(0xFF212123))
         ){
-            WritePostForTradingScreenFooter(
-                myUID,
-                writePostForTradingViewModel,
-                mainNavController
-            )
+            LazyColumn ( modifier = Modifier.weight(1f) ) {
+                // header
+                item {
+                    WritePostForTradingScreenHeader(mainNavController)
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(horizontal = 0.dp),
+                        color = Color(0xFF636365)
+                    )
+                }
+
+                // body
+                item {
+                    WritePostForTradingScreenBody(tag, isForUpdate, writePostForTradingViewModel)
+                }
+            }
+
+            // footer
+            Surface (
+                modifier = Modifier
+                    .padding(horizontal = 12.dp),
+                color = Color(0xFF212123)
+            ){
+                WritePostForTradingScreenFooter(
+                    tag,
+                    isForUpdate,
+                    myUID,
+                    writePostForTradingViewModel,
+                    mainNavController
+                )
+            }
         }
     }
 }
@@ -153,6 +201,8 @@ fun WritePostForTradingScreenHeader(
 
 @Composable
 fun WritePostForTradingScreenBody(
+    tag : String,
+    isForUpdate : Boolean,
     postDetails : WritePostForTradingViewModel
 ){
     Column (
@@ -162,7 +212,7 @@ fun WritePostForTradingScreenBody(
     ){
         // upload images
         Spacer(modifier = Modifier.size(8.dp))
-        UploadImagesForTrading(postDetails)
+        UploadImagesForTrading(tag, isForUpdate, postDetails)
         Spacer(modifier = Modifier.size(32.dp))
 
         Column (
@@ -191,6 +241,8 @@ fun WritePostForTradingScreenBody(
 
 @Composable
 fun UploadImagesForTrading(
+    tag : String,
+    isForUpdate : Boolean,
     postDetails : WritePostForTradingViewModel
 ){
     val currentContext = LocalContext.current
@@ -205,19 +257,19 @@ fun UploadImagesForTrading(
                 // 카운팅 먼저 하고 난 후, pre-signed url 획득 실패시 다시 차감
                 // 비 동기로 인해 서버 응답이 느려질 수 있음을 고려한 방식
                 currentImagesCount++
-                postDetails.addImageToList(it, currentContext, currentImagesCount){ getCurrentImagesCount ->
+                postDetails.addImageToList(tag, it, currentContext, currentImagesCount){ getCurrentImagesCount ->
                     currentImagesCount = getCurrentImagesCount
                 }
             }
         }
         else{ any as Uri
             currentImagesCount++
-            postDetails.addImageToList(any, currentContext, currentImagesCount) { getCurrentImagesCount ->
+            postDetails.addImageToList(tag, any, currentContext, currentImagesCount) { getCurrentImagesCount ->
                 currentImagesCount = getCurrentImagesCount
             }
         }
 
-        Log.d("WRITE_POST_FOR_TRADING_VIEW", "current images count : ${currentImagesCount}")
+        Log.d(tag, "current images count : ${currentImagesCount}")
     }
     var imageCountTextColor : Color
 
@@ -304,10 +356,18 @@ fun UploadImagesForTrading(
                         shape = RoundedCornerShape(8.dp),
                         color = Color(0xFF212123)
                     ){
-                        AsyncImage(
-                            model = image.file.getUri(),
-                            contentDescription = "product image"
-                        )
+                        if (image.file != null) {
+                            AsyncImage(
+                                model = image.file!!.getUri(),
+                                contentDescription = "product image"
+                            )
+                        }
+                        else {
+                            AsyncImage(
+                                model = image.url,
+                                contentDescription = "product image"
+                            )
+                        }
                     }
 
                     // Remove image button
@@ -317,15 +377,16 @@ fun UploadImagesForTrading(
                             .offset(x = 56.dp, y = -8.dp)
                             .clickable {
                                 // remove this image
-                                postDetails.deleteImageFromList(image) { isSuccessful ->
+                                postDetails.deleteImageFromList(
+                                    tag,
+                                    isForUpdate,
+                                    image
+                                ) { isSuccessful ->
                                     if (isSuccessful) {
                                         currentImagesCount--
                                     }
                                 }
-                                Log.d(
-                                    "WRITE_POST_FOR_TRADING_VIEW",
-                                    "current images count : ${currentImagesCount}"
-                                )
+                                Log.d(tag, "current images count : ${currentImagesCount}")
                             },
                         shape = CircleShape,
                         color = Color(0xFFEAEBEF)
@@ -352,27 +413,16 @@ fun WritePostTitle(
             .fillMaxWidth()
             .wrapContentHeight()
     ){
-        Text(
-            text = "제목",
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
+        Text(text = "제목", fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.size(16.dp))
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
             maxLines = 1,
-            placeholder = {
-                Text(
-                    text = "제목",
-                    color = Color(0xFF858C94)
-                )
-            },
+            placeholder = { Text(text = "제목", color = Color(0xFF858C94)) },
             value = postDetails.title.value,
             onValueChange = { input ->
-                if (!input.any(){
-                    char -> char == '\n'
-                }){
+                if (!input.any{ char -> char == '\n' }){
                     postDetails.title.value = input
                 }
             }
@@ -431,9 +481,7 @@ fun SelectHowToTrade(
 
             // to sell
             Button(
-                onClick = {
-                    postDetails.forSelling.value = true
-                },
+                onClick = { postDetails.forSelling.value = true },
                 colors = ButtonColors(
                     containerColor = toSellButtonColor,
                     contentColor = toSellButtonTextColor,
@@ -441,19 +489,12 @@ fun SelectHowToTrade(
                     disabledContentColor = Color.White
                 ),
                 border = toSellButtonBorder
-            ) {
-                Text(
-                    text = "판매하기",
-                    fontSize = 16.sp
-                )
-            }
+            ) { Text(text = "판매하기", fontSize = 16.sp) }
             Spacer(modifier = Modifier.size(8.dp))
 
             // to give
             Button(
-                onClick = {
-                    postDetails.forSelling.value = false
-                },
+                onClick = { postDetails.forSelling.value = false },
                 colors = ButtonColors(
                     containerColor = toGiveButtonColor,
                     contentColor = toGiveButtonTextColor,
@@ -461,12 +502,7 @@ fun SelectHowToTrade(
                     disabledContentColor = Color.White
                 ),
                 border = toGiveButtonBorder
-            ) {
-                Text(
-                    text = "나눔하기",
-                    fontSize = 16.sp
-                )
-            }
+            ) { Text(text = "나눔하기", fontSize = 16.sp) }
         }
         Spacer(modifier = Modifier.size(16.dp))
 
@@ -477,6 +513,7 @@ fun SelectHowToTrade(
                     .fillMaxWidth()
                     .onFocusChanged {
                         if (it.isFocused) {
+
                             if (postDetails.productPriceInt > 0) {
                                 postDetails.productPrice.value =
                                     postDetails.productPriceInt.toString()
@@ -487,18 +524,8 @@ fun SelectHowToTrade(
                         }
                     },
                 maxLines = 1,
-                placeholder = {
-                    Text(
-                        text = "가격을 입력해주세요.",
-                        color = Color(0xFF858C94)
-                    )
-                },
-                prefix = {
-                    Text(
-                        text = "₩ ",
-                        color = Color(0xFF858C94)
-                    )
-                },
+                placeholder = { Text(text = "가격을 입력해주세요.", color = Color(0xFF858C94)) },
+                prefix = { Text(text = "₩ ", color = Color(0xFF858C94)) },
                 value = postDetails.productPrice.value,
                 onValueChange = { input ->
                     if (
@@ -508,9 +535,7 @@ fun SelectHowToTrade(
                         postDetails.productPrice.value = postDetails.getValidPrice(input)
                     }
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal
-                )
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             Spacer(modifier = Modifier.size(16.dp))
 
@@ -525,8 +550,7 @@ fun SelectHowToTrade(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Checkbox(
-                    modifier = Modifier
-                        .size(20.dp),
+                    modifier = Modifier.size(20.dp),
                     checked = postDetails.acceptNegotiation.value,
                     onCheckedChange = { input ->
                         postDetails.acceptNegotiation.value = input
@@ -556,8 +580,7 @@ fun SelectHowToTrade(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Checkbox(
-                    modifier = Modifier
-                        .size(20.dp),
+                    modifier = Modifier.size(20.dp),
                     checked = postDetails.acceptFreebieRequest.value,
                     onCheckedChange = { input ->
                         postDetails.acceptFreebieRequest.value = input
@@ -633,8 +656,7 @@ fun SelectTradingLocation(
         Spacer(modifier = Modifier.size(16.dp))
         OutlinedTextField(
             readOnly = true,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             maxLines = 1,
             placeholder = {
                 Row (
@@ -662,14 +684,47 @@ fun SelectTradingLocation(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WritePostForTradingScreenFooter(
-    myUID : Int,
+    tag : String,
+    isForUpdate : Boolean,
+    myUid : Int,
     postDetails : WritePostForTradingViewModel,
-    navController: NavHostController
+    mainNavController: NavHostController
 ){
     val currentContext = LocalContext.current
+    var pressedUploadButton by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect (pressedUploadButton) {
+
+        if (pressedUploadButton) {
+
+            if (isForUpdate) {
+                postDetails.updatePostForTrading(tag, postDetails.postId!!, myUid) { isSuccessful ->
+
+                    if (isSuccessful) {
+                        Toast.makeText(currentContext, "게시글 수정 완료", LENGTH_SHORT).show()
+                        mainNavController.popBackStack()
+                    }
+                    else {
+                        Toast.makeText(currentContext, "서버 에러", LENGTH_SHORT).show()
+                    }
+                }
+            }
+            else {
+                postDetails.uploadPostForTrading(tag, myUid) { isSuccessful ->
+
+                    if (isSuccessful) {
+                        Toast.makeText(currentContext, "게시글 작성 완료", LENGTH_SHORT).show()
+                        mainNavController.popBackStack()
+                    }
+                    else {
+                        Toast.makeText(currentContext, "서버 에러", LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
 
     Column (
         modifier = Modifier
@@ -689,26 +744,13 @@ fun WritePostForTradingScreenFooter(
                 disabledContentColor = Color(0xFFA2A2A2)
             ),
             enabled = postDetails.isValidPostDetails(),
-            onClick = {
-                postDetails.uploadPostForTrading(myUID) { isSuccessful ->
-                    when (isSuccessful) {
-                        true -> {
-                            Toast.makeText(currentContext, "성공", LENGTH_SHORT).show()
-                            navController.popBackStack()
-                        }
-                        else -> {
-                            Toast.makeText(currentContext, "에러", LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            },
+            onClick = { pressedUploadButton = true },
         ) {
             Text(
                 text = "작성 완료",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 4.dp)
             )
         }
     }

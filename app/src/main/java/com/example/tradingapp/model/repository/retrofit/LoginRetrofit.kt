@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object LoginRetrofit {
 
-    val retrofit = Retrofit.Builder()
+    val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.SERVER_ADDRESS)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

@@ -3,13 +3,17 @@ package com.example.tradingapp.model.viewmodel.post
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.repository.PostDataRepository
 
-class PostForTradingViewModel (
+class TradingPostViewModel (
 ) : ViewModel() {
+    var postId : Int? = null
+    var postDetails : PostDetails? = null
+    var backStackEntryId = mutableStateOf<String?>(null)
+    val isPressedAnyPreviewPost = mutableStateOf(false)
     val otherTradingPostsList = mutableListOf<PostDetails>()
     val lazyListState by derivedStateOf { LazyListState(0, 0) }
 

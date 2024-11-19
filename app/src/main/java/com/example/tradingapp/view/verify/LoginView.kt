@@ -19,6 +19,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,7 +64,7 @@ fun LoginView(
     LaunchedEffect(Unit) {
 
         if (loginViewModel.doAutoLogin(tag)){
-            loginViewModel.Login(
+            loginViewModel.login(
                 tag,
                 loginViewModel.myCertificate!!.id,
                 loginViewModel.myCertificate!!.password,
@@ -104,6 +106,14 @@ fun LoginView(
                     OutlinedTextField(
                         value = inputID,
                         placeholder = { Text(text = "ID 입력", color = Color.White) },
+                        textStyle = TextStyle(color = Color.White),
+                        colors = TextFieldDefaults.colors(
+                            cursorColor = Color.White,
+                            unfocusedContainerColor = Color(0x00000000),
+                            focusedContainerColor = Color(0x00000000),
+                            unfocusedIndicatorColor = Color(0xFF636365),
+                            focusedIndicatorColor = Color.White
+                        ),
                         singleLine = true,
                         onValueChange = { input ->
                             if (restrictInputID(input)){ inputID = input }
@@ -123,6 +133,14 @@ fun LoginView(
                     OutlinedTextField(
                         value = inputPW,
                         placeholder = { Text(text = "비밀번호 입력", color = Color.White) },
+                        textStyle = TextStyle(color = Color.White),
+                        colors = TextFieldDefaults.colors(
+                            cursorColor = Color.White,
+                            unfocusedContainerColor = Color(0x00000000),
+                            focusedContainerColor = Color(0x00000000),
+                            unfocusedIndicatorColor = Color(0xFF636365),
+                            focusedIndicatorColor = Color.White
+                        ),
                         singleLine = true,
                         onValueChange = { input ->
                             if (restrictInputPW(input)){ inputPW = input }
@@ -157,7 +175,7 @@ fun LoginView(
                         .wrapContentHeight()
                         .clickable {
                             if (inputID.isNotBlank() && inputPW.isNotBlank()) {
-                                loginViewModel.Login(tag, inputID, inputPW, keepLogin) { getUserInformation, isSuccessful ->
+                                loginViewModel.login(tag, inputID, inputPW, keepLogin) { getUserInformation, isSuccessful ->
 
                                     if (isSuccessful) {
                                         Toast.makeText(currentContext, "로그인 성공", LENGTH_SHORT).show()
@@ -187,7 +205,6 @@ fun LoginView(
                     Text(
                         text = "로그인",
                         color = Color.White,
-                        //fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center,
                         fontSize = 24.sp,
                         modifier = Modifier.padding(vertical = 8.dp),

@@ -33,12 +33,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import com.example.tradingapp.R
+import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.repository.PostDataRepository
 import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 
 
@@ -145,18 +152,23 @@ fun getAlphaValueForHeader(
 ) : Long {
     var offset : Int
 
-    if (firstVisibleItemIndex != 0){
-        return (0xFF000000)
-    }
+    if (firstVisibleItemIndex != 0){ return (0xFF000000) }
 
-    if ((firstVisibleItemScrollOffset / 3) >= 0xFF){
-        offset = 0xFF
-    }
-    else {
-        offset = (firstVisibleItemScrollOffset / 3)
-    }
+    if ((firstVisibleItemScrollOffset / 3) >= 0xFF){ offset = 0xFF }
+    else { offset = (firstVisibleItemScrollOffset / 3) }
 
     return (offset.toLong() * 0X01000000)
+}
+
+
+fun deletePost(
+    tag : String,
+    inputPostId: Int,
+    callback: (Boolean) -> Unit
+) {
+    PostDataRepository.deletePost(tag, inputPostId) { isSucessful ->
+        callback(isSucessful)
+    }
 }
 
 
@@ -180,161 +192,5 @@ fun unfavoritePost(
 ) {
     PostDataRepository.unfavoritePost(tag, inputUserUid, inputPostId) { isSuccessful ->
         callback(isSuccessful)
-    }
-}
-
-
-@Composable
-fun PreviewPostForTrading(
-    tag : String,
-    previewPost : PostDetails,
-    selectedPostDetails : (PostDetails) -> Unit
-){
-    val currentContext = LocalContext.current
-    var isSelected by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(isSelected) {
-        if (isSelected) {
-            getSelectedPostDetails(tag, previewPost.postID) { getPostDetails, isSuccessful ->
-                if (isSuccessful) {
-
-                    if (getPostDetails != null) {
-                        selectedPostDetails(getPostDetails)
-                    } else {
-                        Toast
-                            .makeText(currentContext, "존재하지 않는 게시글입니다.", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                } else {
-                    Toast
-                        .makeText(currentContext, "서버 에러", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-
-            isSelected = false
-        }
-    }
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { isSelected = true }
-            .padding(12.dp),
-        color = Color(0xFF212123)
-    ) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Image
-            if (previewPost.thumbnailImageUrl != null){
-                AsyncImage(
-                    model = previewPost.thumbnailImageUrl,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(120.dp)
-                        .clip(RoundedCornerShape(8)),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "product thumbnail"
-                )
-            }
-            Spacer(modifier = Modifier.size(12.dp))
-
-            // Content
-            Column (
-                modifier = Modifier
-                    .weight(2f)
-            ) {
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    // Title
-                    Text(text = previewPost.title,
-                        maxLines = 1,
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        modifier = Modifier.weight(9f),
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_more_vert_24),
-                        tint = Color(0xFF8E8D91),
-                        contentDescription = "more button",
-                        modifier = Modifier
-                            .clickable {  }
-                    )
-                }
-                Spacer(modifier = Modifier.size(4.dp))
-
-                // location, posted time
-                Row (
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    Text(
-                        text = "주소 • ${getTimeLagFromNow(LocalDateTime.parse(previewPost.uploadDate))} 전",
-                        maxLines = 1,
-                        color = Color(0xFF8E8D91),
-                        overflow = TextOverflow.Ellipsis)
-                }
-                Spacer(modifier = Modifier.size(4.dp))
-
-                // price
-                Text(text = "${addDelimiterToPrice(previewPost.postDetailsTrading!!.productPrice.toString())}원",
-                    maxLines = 1,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.size(4.dp))
-
-                // others
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    // chatting
-                    Row (
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_chat_bubble_outline_24),
-                            tint = Color(0xFF8E8D91),
-                            modifier = Modifier.size(16.dp),
-                            contentDescription = "chatting"
-                        )
-                        Text(
-                            text = " ${previewPost.postDetailsTrading.chatCount}",
-                            color = Color(0xFF8E8D91),
-                            fontSize = 12.sp,
-                            maxLines = 1
-                        )
-                    }
-                    Spacer(modifier = Modifier.size(12.dp))
-
-                    // favorites
-                    Row (
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_favorite_border_24),
-                            tint = Color(0xFF8E8D91),
-                            modifier = Modifier.size(16.dp),
-                            contentDescription = "favorites"
-                        )
-                        Text(
-                            text = " ${previewPost.postDetailsTrading.favoriteCount}",
-                            color = Color(0xFF8E8D91),
-                            fontSize = 12.sp,
-                            maxLines = 1
-                        )
-                    }
-                }
-            }
-        }
     }
 }

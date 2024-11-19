@@ -1,8 +1,8 @@
 package com.example.tradingapp.view.home
 
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,41 +37,50 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.tradingapp.R
+import com.example.tradingapp.model.data.navigation.HomeNavigationGraph
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
+import com.example.tradingapp.model.data.user.UserInformation
+import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
 import com.example.tradingapp.model.viewmodel.post.getPostsList
-import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.viewmodel.home.HomeViewModel
-import com.example.tradingapp.model.viewmodel.post.PreviewPostForTrading
+import com.example.tradingapp.view.LoadingBar
+import com.example.tradingapp.view.graph.HomeScreen
+import com.example.tradingapp.view.post.trading.PreviewTradingPost
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeView(
     tag : String,
+    myInfo : UserInformation,
     homeViewModel : HomeViewModel,
-    getDeactivatedScreen : Boolean,
-    setDeactivatedScreen : (Boolean) -> Unit,
-    selectedPostDetails : (PostDetails) -> Unit,
-    navigateFromMain : (route : String) -> Unit
+    backStackEntryId : String,
+    homeNavController : NavHostController,
+    mainNavController : NavHostController
 ){
-    val deactivatedScreenColor : Color by animateColorAsState(
-        targetValue =
-        if (getDeactivatedScreen){
-            Color(0xC0000000)
-        }
-        else{
-            Color(0x00000000)
-        }
+    val isDeactivatedScreen = HomeScreen.deactiveHomeScreen.collectAsState().value
+    val deactivatedScreenAlpha by animateFloatAsState(
+        targetValue = if (isDeactivatedScreen){ 0.5f } else{ 0.0f }
     )
 
     Box (
@@ -80,8 +89,7 @@ fun HomeView(
             .background(Color(0xFF212123))
     ){
         Column (
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             // header
             HomeViewHeader()
@@ -94,199 +102,184 @@ fun HomeView(
             }
 
             // body
-            HomePostsList(tag, homeViewModel){ getSelectedPostDetails ->
-                selectedPostDetails(getSelectedPostDetails)
-            }
+            HomePostsList(tag, myInfo, backStackEntryId, homeViewModel, mainNavController)
         }
 
-        // the home view will be deactivated when button pressed
-        if (getDeactivatedScreen){
-            Surface (
+        if (isDeactivatedScreen) {
+            Box (
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable {
-                        setDeactivatedScreen(false)
-                    },
-                color = deactivatedScreenColor
+                    .drawBehind {
+                        drawRect(
+                            color = Color.Black,
+                            alpha = deactivatedScreenAlpha
+                        )
+                    }
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { HomeScreen.active() }
+                    )
             ) {}
         }
 
         // Write post button
-        Box (
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .offset(x = -12.dp, y = -16.dp)
-        ) {
-            WritePostForTradingButton(
-                getDeactivatedScreen,
-                setDeactivatedScreen
-            ) { route ->
-                navigateFromMain(route)
-            }
-        }
+        WriteTradingPostButton(
+            Modifier.align(Alignment.BottomEnd).offset(x = (-12).dp, y = (-16).dp),
+            isDeactivatedScreen,
+            homeNavController,
+            mainNavController
+        )
     }
 }
 
 @Composable
-fun SelectThePurposeOfThePost(
-    setDeactivatedScreen : (Boolean) -> Unit,
-    navigateFromMain : (route : String) -> Unit
+fun TradingTypesList(
+    mainNavController: NavHostController
 ){
     Surface (
-        modifier = Modifier
-            .wrapContentSize(),
+        modifier = Modifier.wrapContentSize(),
         shape = RoundedCornerShape(15),
         color = Color(0xFF212123)
     ) {
         Column (
-            modifier = Modifier
-                .padding(20.dp)
+            modifier = Modifier.padding(20.dp)
         ) {
             Row (
-                modifier = Modifier
-                    .clickable {
-                        setDeactivatedScreen(false)
-                    },
+                modifier = Modifier.clickable { HomeScreen.active() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_multiple_sell_24),
-                    modifier = Modifier
-                        .size(24.dp),
+                    modifier = Modifier.size(24.dp),
                     tint = Color(0xFF8362E7),
                     contentDescription = "sell"
                 )
-                Spacer(modifier = Modifier.size(12.dp))
+                Spacer(Modifier.size(12.dp))
 
-                Text(
-                    text = "여러 물건 팔기",
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                Text(text = "여러 물건 팔기", fontWeight = FontWeight.SemiBold, color = Color.White)
             }
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(Modifier.size(16.dp))
 
             Row (
-                modifier = Modifier
-                    .clickable {
-                        setDeactivatedScreen(false)
-                        navigateFromMain(MainNavigationGraph.WRITEPOSTFORTRADING.name) },
+                modifier = Modifier.clickable {
+                        HomeScreen.active()
+                        mainNavController.navigate(MainNavigationGraph.WRITEPOSTFORTRADING.name)
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_sell_24),
-                    modifier = Modifier
-                        .size(24.dp),
+                    modifier = Modifier.size(24.dp),
                     tint = Color(0xFFE98341),
                     contentDescription = "sell"
                 )
-                Spacer(modifier = Modifier.size(12.dp))
+                Spacer(Modifier.size(12.dp))
 
-                Text(
-                    text = "내 물건 팔기",
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                Text(text = "내 물건 팔기", fontWeight = FontWeight.SemiBold, color = Color.White)
             }
         }
     }
 }
 
 @Composable
-fun WritePostForTradingButton(
-    getDeactivatedScreen : Boolean,
-    setDeactivatedScreen : (Boolean) -> Unit,
-    navigateFromMain : (route : String) -> Unit
+fun WriteTradingPostButton(
+    modifier: Modifier,
+    buttonPressed : Boolean,
+    homeNavController : NavHostController,
+    mainNavController : NavHostController
 ){
-    val buttonPressed = rememberSaveable {
-        mutableStateOf(getDeactivatedScreen)
-    }
-    val animateDp : Dp by animateDpAsState(
-        targetValue =
-        if (buttonPressed.value){ 8.dp }
-        else{ 0.dp }
+    var currentButtonSizeX = 0f
+    val animateButtonSizeX by animateFloatAsState(
+        targetValue = if (buttonPressed){ 2f } else{ 1f }
     )
-    val animateColor : Color by animateColorAsState(
-        targetValue =
-        if (buttonPressed.value){ Color(0xFF212123) }
-        else{ Color(0xFFFF6E1D) }
+    val animateAlpha by animateFloatAsState(
+        targetValue = if (buttonPressed){ 0f } else{ 1f }
     )
-    val animateRotation : Float by animateFloatAsState(
-        targetValue =
-        if (buttonPressed.value){ 45f }
-        else{ 0f }
+    val animateButtonColor : Color by animateColorAsState(
+        targetValue = if (buttonPressed){ Color(0xFF212123) } else{ Color(0xFFFF6E1D) }
     )
-
-    // recompose when the home view is activated
-    buttonPressed.value = getDeactivatedScreen
+    val animateIconRotationZ : Float by animateFloatAsState(
+        targetValue = if (buttonPressed){ 45f } else{ 0f }
+    )
 
     // Button for writing a post
     Column (
-        modifier = Modifier
-            .wrapContentSize(),
+        modifier = modifier.wrapContentSize(),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.Bottom
     ) {
-        if (getDeactivatedScreen){
-            SelectThePurposeOfThePost(
-                setDeactivatedScreen = setDeactivatedScreen
-            ) { route ->
-                navigateFromMain(route)
-            }
-            Spacer(modifier = Modifier.size(8.dp))
+        if (buttonPressed){
+            TradingTypesList(mainNavController)
+            Spacer(Modifier.size(8.dp))
         }
 
-        Surface (
+        Row (
             modifier = Modifier
-                .size(
-                    width = 96.dp - animateDp * 6,
-                    height = 48.dp
-                )
-                .clickable {
-                    buttonPressed.value = !buttonPressed.value
-
-                    if (buttonPressed.value) {
-                        setDeactivatedScreen(true)
-                    } else {
-                        setDeactivatedScreen(false)
-                    }
-                },
-            shape = CircleShape,
-            color = animateColor
-        ) {
-            Row (
-                modifier = Modifier
-                    .fillMaxSize(),
-                //horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_add_24),
-                    modifier = Modifier
-                        .size(32.dp)
-                        .offset(x = 8.dp)
-                        .graphicsLayer {
-                            this.rotationZ = animateRotation
-                        },
-                    tint = Color.White,
-                    contentDescription = "Write post button"
-                )
-
-                Text(
-                    text = "글쓰기",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    style = TextStyle(
-                        platformStyle = PlatformTextStyle(
-                            includeFontPadding = false
+                .size(width = 96.dp, height = 48.dp)
+                .drawBehind {
+                    drawRoundRect(
+                        topLeft = Offset(
+                            x = this.size.width - (this.size.width / animateButtonSizeX),
+                            y = 0f
+                        ),
+                        color = animateButtonColor,
+                        cornerRadius = CornerRadius(100f, 100f),
+                        size = Size(
+                            width = this.size.width / animateButtonSizeX,
+                            height = this.size.height
                         )
-                    ),
-                    maxLines = 1,
-                    modifier = Modifier
-                        .offset(x = 8.dp + animateDp)
+                    )
+                }
+                .clickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = {
+                        homeNavController.currentBackStackEntry?.destination?.route.let {
+
+                            if (it.equals(HomeNavigationGraph.HOME.name)) {
+
+                                if (buttonPressed) { HomeScreen.active() }
+                                else { HomeScreen.deactive() }
+                            }
+                        }
+                    }
                 )
-            }
+                .onSizeChanged { newSize -> currentButtonSizeX = newSize.width.toFloat() },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_add_24),
+                modifier = Modifier
+                    .size(32.dp)
+                    .offset {
+                        IntOffset(
+                            x = (currentButtonSizeX - (currentButtonSizeX / animateButtonSizeX)).toInt() - 8,
+                            y = 0
+                        )
+                    }
+                    .graphicsLayer { this.rotationZ = animateIconRotationZ },
+                tint = Color.White,
+                contentDescription = "Write post button"
+            )
+
+            Text(
+                text = "글쓰기",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
+                style = TextStyle(platformStyle = PlatformTextStyle(false)),
+                maxLines = 1,
+                modifier = Modifier
+                    .graphicsLayer(alpha = animateAlpha)
+                    .offset {
+                        IntOffset(
+                            x = (currentButtonSizeX - (currentButtonSizeX / animateButtonSizeX)).toInt() - 8,
+                            y = 0
+                        )
+                    }
+            )
         }
     }
 }
@@ -303,10 +296,7 @@ fun HomeViewHeader(){
         verticalAlignment = Alignment.CenterVertically
     ){
         Row (
-            modifier = Modifier
-                .clickable {
-
-                },
+            modifier = Modifier.clickable {},
             horizontalArrangement = Arrangement.Start
         ){
             Text(text = "location",
@@ -314,7 +304,8 @@ fun HomeViewHeader(){
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-            Spacer(modifier = Modifier.size(4.dp))
+            Spacer(Modifier.size(4.dp))
+
             Icon(
                 painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                 tint = Color.White,
@@ -335,7 +326,7 @@ fun HomeViewHeader(){
                 contentDescription = "search product",
                 modifier = Modifier.size(28.dp)
             )
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(Modifier.size(16.dp))
 
             // check notification
             Icon(
@@ -360,14 +351,12 @@ fun UpperCategory(){
     ){
         // menu
         Surface(
-            modifier = Modifier
-                .wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(8.dp),
             color = Color(0xFF111113)
         ){
             Row (
-                modifier = Modifier
-                    .padding(8.dp),
+                modifier = Modifier.padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
@@ -378,18 +367,16 @@ fun UpperCategory(){
                 )
             }
         }
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(Modifier.size(8.dp))
 
         // part-time job
         Surface(
-            modifier = Modifier
-                .wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(8.dp),
             color = Color(0xFF111113)
         ){
             Row (
-                modifier = Modifier
-                    .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                modifier = Modifier.padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
@@ -398,7 +385,7 @@ fun UpperCategory(){
                     contentDescription = "part-time job",
                     modifier = Modifier.size(16.dp)
                 )
-                Spacer(modifier = Modifier.size(4.dp))
+                Spacer(Modifier.size(4.dp))
                 Text(
                     text = "알바",
                     fontSize = 16.sp,
@@ -407,18 +394,16 @@ fun UpperCategory(){
                 )
             }
         }
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(Modifier.size(8.dp))
 
         // car
         Surface(
-            modifier = Modifier
-                .wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(8.dp),
             color = Color(0xFF111113)
         ){
             Row (
-                modifier = Modifier
-                    .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                modifier = Modifier.padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
@@ -427,7 +412,7 @@ fun UpperCategory(){
                     contentDescription = "second handed car",
                     modifier = Modifier.size(16.dp)
                 )
-                Spacer(modifier = Modifier.size(4.dp))
+                Spacer(Modifier.size(4.dp))
                 Text(
                     text = "중고차",
                     fontSize = 16.sp,
@@ -436,18 +421,16 @@ fun UpperCategory(){
                 )
             }
         }
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(Modifier.size(8.dp))
 
         // house
         Surface(
-            modifier = Modifier
-                .wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(8.dp),
             color = Color(0xFF111113)
         ){
             Row (
-                modifier = Modifier
-                    .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                modifier = Modifier.padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
@@ -456,7 +439,7 @@ fun UpperCategory(){
                     contentDescription = "house",
                     modifier = Modifier.size(16.dp)
                 )
-                Spacer(modifier = Modifier.size(4.dp))
+                Spacer(Modifier.size(4.dp))
                 Text(
                     text = "부동산",
                     fontSize = 16.sp,
@@ -468,29 +451,27 @@ fun UpperCategory(){
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomePostsList(
     tag : String,
+    myInfo : UserInformation,
+    backStackEntryId : String,
     homeViewModel: HomeViewModel,
-    selectedPostDetails : (PostDetails) -> Unit
+    mainNavController: NavHostController
 ){
-    val pageCount = 10
-    var postsList by rememberSaveable {
-        mutableStateOf(homeViewModel.postsList.toList())
-    }
+    var postsList by rememberSaveable { mutableStateOf(homeViewModel.postsList.toList()) }
     val lazyListState : LazyListState = homeViewModel.lazyListState
     val needMoreLoadPosts by remember(homeViewModel.startLoadingPostNumber) {
         derivedStateOf {
             if (homeViewModel.postsList.isNotEmpty()){
                 lazyListState.firstVisibleItemIndex >= homeViewModel.startLoadingPostNumber
             }
-            else{
-                true
-            }
+            else{ true }
         }
     }
 
-    Log.d(tag, "needMore ${needMoreLoadPosts}")
+    val pageCount = 10
     LaunchedEffect(needMoreLoadPosts) {
         getPostsList(
             tag,
@@ -510,31 +491,56 @@ fun HomePostsList(
         }
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        state = lazyListState
-    ) {
-        // This item's index is 0
-        item ( key = "category" ) {
-            UpperCategory()
+    val reloadPostsList = homeViewModel.reloadPostsList.value
+    LaunchedEffect(reloadPostsList) {
+
+        if (reloadPostsList) {
+            postsList = homeViewModel.postsList.toList()
+            homeViewModel.reloadPostsList.value = false
         }
+    }
 
-        // more than 0 index from this item
-        itemsIndexed(
-            items = postsList,
-            key = { index, post -> post.postID }
-        ){  index, post ->
-
-            if (index > 0){
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    color = Color(0xFF636365)
-                )
+    if (reloadPostsList) {
+        LoadingBar.show()
+    }
+    else {
+        LoadingBar.hide()
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = lazyListState
+        ) {
+            // This item's index is 0
+            item ( key = "category" ) {
+                UpperCategory()
             }
 
-            PreviewPostForTrading(tag = tag, previewPost = post){ getSelectedPostDetails ->
-                selectedPostDetails(getSelectedPostDetails)
+            // more than 0 index from this item
+            itemsIndexed(
+                items = postsList,
+                key = { index, post -> post.postID }
+            ){  index, post ->
+
+                if (index > 0){
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        color = Color(0xFF636365)
+                    )
+                }
+
+                PreviewTradingPost(
+                    tag = tag,
+                    myInfo = myInfo,
+                    previewPost = post
+                ) { selectedPostId ->
+
+                    mainNavController.currentBackStackEntry?.savedStateHandle?.set("post_id", selectedPostId)
+                    MainNavGraphClickListener.navigate(
+                        backStackEntryId,
+                        MainNavigationGraph.TRADINGPOST.name,
+                        mainNavController
+                    )
+                }
             }
         }
     }

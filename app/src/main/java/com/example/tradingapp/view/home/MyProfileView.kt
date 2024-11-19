@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.tradingapp.R
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.user.UserInformation
@@ -32,25 +33,21 @@ import com.example.tradingapp.model.data.user.UserInformation
 fun MyProfileView(
     tag : String,
     myInformation : UserInformation,
-    navigateFromMain : (route : String) -> Unit
+    mainNavController : NavHostController
 ){
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF212123))
     ) {
-        MyProfileHeader { route ->
-            navigateFromMain(route)
-        }
+        MyProfileHeader(mainNavController = mainNavController)
 
         // my profile
-        MyProfileInfo(myInformation) { route ->
-            navigateFromMain(route)
-        }
+        MyProfileInfo(myInformation, mainNavController)
         Spacer(modifier = Modifier.size(16.dp))
 
         // my posts
-        MyTradingPosts{ route -> navigateFromMain(route) }
+        MyTradingPosts(myInformation, mainNavController)
         HorizontalDivider(
             thickness = 1.dp,
             modifier = Modifier.padding(horizontal = 0.dp),
@@ -66,9 +63,10 @@ fun MyProfileView(
 fun MyProfileHeader(
     barColor : Color = Color(0xFF212123),
     dividerColor : Color = Color(0xFF636365),
-    navigateFromMain: (route: String) -> Unit
+    mainNavController: NavHostController
 ){
-    Column () {
+    Column (
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -90,7 +88,7 @@ fun MyProfileHeader(
                         modifier = Modifier
                             .size(28.dp)
                             .clickable {
-                                navigateFromMain(MainNavigationGraph.SETTINGOPTIONS.name)
+                                mainNavController.navigate(MainNavigationGraph.SETTINGOPTIONS.name)
                             }
                     )
                 }
@@ -107,7 +105,7 @@ fun MyProfileHeader(
 @Composable
 fun MyProfileInfo(
     myInformation: UserInformation,
-    navigateFromMain : (route : String) -> Unit
+    mainNavController: NavHostController
 ){
     Row (
         modifier = Modifier
@@ -116,9 +114,7 @@ fun MyProfileInfo(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row (verticalAlignment = Alignment.CenterVertically) {
             Surface (
                 modifier = Modifier
                     .size(36.dp),
@@ -132,8 +128,8 @@ fun MyProfileInfo(
         }
 
         Surface (
-            modifier = Modifier
-                .clickable {
+            modifier = Modifier.clickable {
+
                 },
             shape = RoundedCornerShape(10),
             color = Color(0xFF424249)
@@ -145,7 +141,8 @@ fun MyProfileInfo(
 
 @Composable
 fun MyTradingPosts(
-    navigateFromMain : (route : String) -> Unit
+    myInformation: UserInformation,
+    mainNavController: NavHostController
 ) {
     Column (
         modifier = Modifier
@@ -157,7 +154,7 @@ fun MyTradingPosts(
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { navigateFromMain(MainNavigationGraph.FAVORITEPOSTSLIST.name) }
+                .clickable { mainNavController.navigate(MainNavigationGraph.FAVORITEPOSTSLIST.name) }
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -169,7 +166,8 @@ fun MyTradingPosts(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    navigateFromMain(MainNavigationGraph.USERTRADINGPOSTSLIST.name)
+                    mainNavController.currentBackStackEntry?.savedStateHandle?.set("user_uid", myInformation.uid)
+                    mainNavController.navigate(MainNavigationGraph.USERTRADINGPOSTSLIST.name)
                 }
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -182,7 +180,6 @@ fun MyTradingPosts(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-
                 }
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -207,7 +204,6 @@ fun MyCommunityPosts() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    
                 }
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically

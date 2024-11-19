@@ -1,15 +1,22 @@
 package com.example.tradingapp.view.graph
 
 import android.app.Activity
+import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,13 +31,17 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,110 +58,115 @@ import com.example.tradingapp.model.data.navigation.valueOfHomeNavigationGraph
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.user.UserInformation
 import com.example.tradingapp.model.viewmodel.home.HomeViewModel
+import com.example.tradingapp.model.viewmodel.post.deletePost
+import com.example.tradingapp.view.LoadingBar
 import com.example.tradingapp.view.home.ChatView
 import com.example.tradingapp.view.home.HomeView
 import com.example.tradingapp.view.home.MapView
 import com.example.tradingapp.view.home.MyProfileView
+import com.example.tradingapp.view.other.PostOptionsPanel
 import com.example.tradingapp.view.post.community.CommunityView
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
+object HomeScreen{
+    private val _deactiveHomeScreen = MutableStateFlow(false)
+    val deactiveHomeScreen : StateFlow<Boolean> = _deactiveHomeScreen.asStateFlow()
+
+    fun deactive(){
+        _deactiveHomeScreen.value = true
+    }
+
+    fun active(){
+        _deactiveHomeScreen.value = false
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(
     myInformation : UserInformation,
-    homeViewModel : HomeViewModel = viewModel(),
-    homeNavController : NavHostController = rememberNavController(),
-    selectedPost : (PostDetails) -> Unit,
-    navigateFromMain : (route : String) -> Unit
+    homeViewModel : HomeViewModel,
+    mainNavController : NavHostController,
+    homeNavController : NavHostController = rememberNavController()
 ){
     val currentContext = LocalContext.current
+    val homeGraphRootEntryId = homeViewModel.homeGraphRootEntryId.value
     var transitionDir by rememberSaveable { mutableStateOf(2) }
-    var isDeactivatedScreen by remember { mutableStateOf(false) }
-    val deactivatedScreenColor : Color by animateColorAsState(targetValue =
-        if (isDeactivatedScreen){
-            Color(0xC0000000)
-        }
-        else{
-            Color(0x00000000)
-        }
-    )
+    val isDeactivatedHomeScreen = HomeScreen.deactiveHomeScreen.collectAsState().value
 
-    BackHandler ( enabled = true ){
-        (currentContext as Activity).finish()
+    BackHandler( enabled = true ){
+
+        if (isDeactivatedHomeScreen) { HomeScreen.active() }
+        else { (currentContext as Activity).finish() }
     }
 
-    Column (
-        modifier = Modifier.fillMaxSize()
-    ){
-        // header & body
-        NavHost(
-            modifier = Modifier.weight(1f),
-            navController = homeNavController,
-            startDestination = HomeNavigationGraph.HOME.name,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / transitionDir }) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { it / (-transitionDir) }) },
-            popEnterTransition = { EnterTransition.None },
-            popExitTransition = { ExitTransition.None }
-        ) {
-            composable(route = HomeNavigationGraph.HOME.name){
-                val tag = "HOME_VIEW"
+    LaunchedEffect(Unit) {
+        HomeScreen.active()
 
-                HomeView(
-                    tag,
-                    homeViewModel,
-                    isDeactivatedScreen,
-                    setDeactivatedScreen = { getDeactivateScreen ->
-                        isDeactivatedScreen = getDeactivateScreen
-                    },
-                    selectedPostDetails = { getSelectedPostDetails ->
-                        selectedPost(getSelectedPostDetails)
-                    },
-                    navigateFromMain = { route ->
-                        navigateFromMain(route)
-                    }
-                )
-            }
-            composable(route = HomeNavigationGraph.COMMUNITY.name){
-                val tag = "COMMUNITY_VIEW"
-
-                CommunityView(tag)
-            }
-            composable(route = HomeNavigationGraph.MAP.name){
-                val tag = "MAP_VIEW"
-
-                MapView(tag)
-            }
-            composable(route = HomeNavigationGraph.CHATS.name){
-                val tag = "CHAT_VIEW"
-
-                ChatView(tag)
-            }
-            composable(route = HomeNavigationGraph.PROFILE.name){
-                val tag = "MY_PROFILE_VIEW"
-
-                MyProfileView(tag, myInformation){ route -> navigateFromMain(route) }
-            }
+        if (homeGraphRootEntryId == null) {
+            homeViewModel.homeGraphRootEntryId.value = mainNavController.currentBackStackEntry?.id
         }
+    }
 
+    if (homeGraphRootEntryId == null) {
+        LoadingBar.show()
+    }
+    else {
+        LoadingBar.hide()
+        Column (
+            modifier = Modifier.fillMaxSize()
+        ){
+            // header & body
+            NavHost(
+                modifier = Modifier.weight(1f),
+                navController = homeNavController,
+                startDestination = HomeNavigationGraph.HOME.name,
+                enterTransition = { slideInHorizontally(initialOffsetX = { it / transitionDir }) },
+                exitTransition = { slideOutHorizontally(targetOffsetX = { it / (-transitionDir) }) },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None }
+            ) {
+                composable(route = HomeNavigationGraph.HOME.name){
+                    val tag = "HOME_VIEW"
 
-        // footer
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-        ) {
-            // Bottom navigation bar
-            HomeBottomNavigationBar(homeNavController = homeNavController) { getTransitionDir ->
-                transitionDir = getTransitionDir
+                    HomeView(
+                        tag,
+                        myInformation,
+                        homeViewModel,
+                        homeGraphRootEntryId,
+                        homeNavController,
+                        mainNavController
+                    )
+                }
+                composable(route = HomeNavigationGraph.COMMUNITY.name){
+                    val tag = "COMMUNITY_VIEW"
+
+                    CommunityView(tag)
+                }
+                composable(route = HomeNavigationGraph.MAP.name){
+                    val tag = "MAP_VIEW"
+
+                    MapView(tag)
+                }
+                composable(route = HomeNavigationGraph.CHATS.name){
+                    val tag = "CHAT_VIEW"
+
+                    ChatView(tag)
+                }
+                composable(route = HomeNavigationGraph.PROFILE.name){
+                    val tag = "MY_PROFILE_VIEW"
+                    Log.d(tag, "${myInformation}")
+                    MyProfileView(tag, myInformation, mainNavController)
+                }
             }
 
-            if (isDeactivatedScreen){
-                Surface (
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable {
-                            isDeactivatedScreen = !isDeactivatedScreen
-                        },
-                    color = deactivatedScreenColor
-                ) {}
+
+            // footer
+            // Bottom navigation bar
+            HomeBottomNavigationBar(homeNavController) { getTransitionDir ->
+                transitionDir = getTransitionDir
             }
         }
     }
@@ -168,12 +184,24 @@ fun HomeBottomNavigationBar(
     ),
     getTransitionDir : (Int) -> Unit
 ){
-    val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
-    val currentDestinationView = navBackStackEntry?.destination?.route
+    val isDeactivatedHomeScreen = HomeScreen.deactiveHomeScreen.collectAsState().value
+    val deactivatedScreenAlpha by animateFloatAsState(
+        targetValue = if (isDeactivatedHomeScreen){ 0.5f } else{ 0.0f }
+    )
+    val currentRoute = homeNavController.currentBackStackEntryAsState().value?.destination?.route
     var isCurrentView : Boolean
 
     Column (
-        modifier = Modifier.wrapContentSize()
+        modifier = Modifier
+            .wrapContentSize()
+            .height(80.dp)
+            .drawWithContent {
+                drawContent()
+                drawRect(
+                    color = Color.Black,
+                    alpha = deactivatedScreenAlpha
+                )
+            }
     ){
         HorizontalDivider( thickness = (1f).dp, color = Color(0xFF636365) )
         NavigationBar (
@@ -181,18 +209,23 @@ fun HomeBottomNavigationBar(
             containerColor = Color(0xFF212123)
         ){
             navigationItems.forEach { item ->
-                isCurrentView = item.route.equals(currentDestinationView)
+                isCurrentView = (item.route == currentRoute)
 
                 NavigationBarItem(
                     selected = isCurrentView,
                     onClick = {
-                        if (currentDestinationView != null){
-                            if (!currentDestinationView.equals(item.route)){
-                                getTransitionDir(getTransitionDir(currentDestinationView!!, item.route))
+                        if (!isDeactivatedHomeScreen
+                            && currentRoute != null){
+
+                            if (currentRoute != item.route){
+                                getTransitionDir(getTransitionDir(currentRoute, item.route))
                                 homeNavController.popBackStack()
                                 homeNavController.navigate(item.route)
+                                // 임의 버튼과 동시 클릭한 경우를 고려
+                                HomeScreen.active()
                             }
                         }
+                        else { HomeScreen.active() }
                     },
                     icon = {
                         if (isCurrentView){

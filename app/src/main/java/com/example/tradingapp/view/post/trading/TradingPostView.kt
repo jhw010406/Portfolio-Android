@@ -1,7 +1,9 @@
 package com.example.tradingapp.view.post.trading
 
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,61 +57,112 @@ import com.example.tradingapp.R
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.data.post.PostDetails
+import com.example.tradingapp.model.data.user.UserInformation
+import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
+import com.example.tradingapp.model.viewmodel.home.HomeViewModel
 import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
-import com.example.tradingapp.model.viewmodel.post.PostForTradingViewModel
+import com.example.tradingapp.model.viewmodel.post.TradingPostViewModel
 import com.example.tradingapp.model.viewmodel.post.getAlphaValueForHeader
 import com.example.tradingapp.model.viewmodel.post.getPostsList
 import com.example.tradingapp.model.viewmodel.post.getSelectedPostDetails
 import com.example.tradingapp.model.viewmodel.post.getTimeLagFromNow
+import com.example.tradingapp.view.LoadingBar
+import com.example.tradingapp.view.LoadingView
 import java.time.LocalDateTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PostForTradingView(
+fun TradingPostView(
     tag : String,
-    myUid: Int,
-    postDetails: PostDetails,
+    myInfo : UserInformation,
+    postId : Int,
+    homeViewModel: HomeViewModel,
     mainNavController: NavHostController,
-    getUserInfo : (getUserUid : Int?, getUserId : String?) -> Unit,
-    selectedPostDetails : (PostDetails) -> Unit,
-    postForTradingViewModel: PostForTradingViewModel = viewModel()
+    tradingPostViewModel: TradingPostViewModel
 ){
+    val currentContext = LocalContext.current
+    val backStackEntryId = tradingPostViewModel.backStackEntryId.value
+    // 화면 회전으로 인한 recompose시에는 post reload 불가
+    var loadedPost by rememberSaveable { mutableStateOf(false) }
     val bodyLazyListState = rememberLazyListState()
+    val postDetails = tradingPostViewModel.postDetails
 
-    Box (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF212123))
-    ) {
-        Column {
-            PostForTradingBody(
-                tag,
-                Modifier.weight(1f),
-                bodyLazyListState,
-                postDetails,
-                mainNavController,
-                selectedPostDetails = { getSelectedPostDetails ->
-                    selectedPostDetails(getSelectedPostDetails)
-                },
-                getUserInfo = { getUserUid, getUserId ->
-                    getUserInfo(getUserUid, getUserId)
-                }
-            )
+    LaunchedEffect(Unit) {
 
-            // footer
-            PostForTradingFooter(
-                tag = tag,
-                myUid = myUid,
-                postDetails = postDetails,
-                postForTradingViewModel = postForTradingViewModel
-            )
+        if (backStackEntryId == null) {
+            tradingPostViewModel.backStackEntryId.value = mainNavController.currentBackStackEntry?.id
         }
 
-        PostForTradingHeader(bodyLazyListState = bodyLazyListState, mainNavController = mainNavController)
+        if (tradingPostViewModel.postDetails == null) {
+
+            getSelectedPostDetails(tag, postId) { getPostDetails, isSuccessful ->
+
+                if (isSuccessful) {
+
+                    if (getPostDetails != null) {
+                        tradingPostViewModel.postDetails = getPostDetails
+                        loadedPost = true
+                    }
+                    else {
+                        Toast.makeText(currentContext, "게시글 접근에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                        mainNavController.currentBackStackEntry?.destination?.route.let {
+
+                            if (it.equals(MainNavigationGraph.TRADINGPOST.name)){
+                                mainNavController.popBackStack()
+                            }
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(currentContext, "존재하지 않는 게시글입니다.", Toast.LENGTH_SHORT).show()
+                    homeViewModel.removeItemByPostId(postId)
+                    homeViewModel.reloadPostsList.value = true
+                    mainNavController.currentBackStackEntry?.destination?.route.let {
+
+                        if (it.equals(MainNavigationGraph.TRADINGPOST.name)){
+                            mainNavController.popBackStack()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (!loadedPost || backStackEntryId == null) {
+        LoadingView()
+    }
+    else {
+        Box (
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF212123))
+        ) {
+            Column {
+                TradingPostBody(
+                    tag,
+                    Modifier.weight(1f),
+                    backStackEntryId,
+                    bodyLazyListState,
+                    postDetails!!,
+                    mainNavController
+                )
+
+                // footer
+                TradingPostFooter(
+                    tag = tag,
+                    myUid = myInfo.uid,
+                    postDetails = postDetails,
+                    tradingPostViewModel = tradingPostViewModel
+                )
+            }
+
+            TradingPostHeader(bodyLazyListState = bodyLazyListState, mainNavController = mainNavController)
+        }
     }
 }
 
 @Composable
-fun PostForTradingHeader(
+fun TradingPostHeader(
     bodyLazyListState : LazyListState,
     mainNavController: NavController
 ){
@@ -178,33 +231,25 @@ fun PostForTradingHeader(
 }
 
 @Composable
-fun PostForTradingFooter(
+fun TradingPostFooter(
     tag : String,
     myUid : Int,
     postDetails: PostDetails,
-    postForTradingViewModel: PostForTradingViewModel
+    tradingPostViewModel: TradingPostViewModel
 ){
     val currentContext = LocalContext.current
     var favoriteIconIdx by rememberSaveable { mutableStateOf(0) }
-    val favoriteIcon by remember {
-        mutableStateOf(
-            listOf(
-                R.drawable.outline_favorite_border_24,
-                R.drawable.baseline_favorite_24
-            )
-        )
-    }
-    var selectedFavoriteButton by rememberSaveable { mutableStateOf<Boolean?>(null) }
+    val favoriteIcon = listOf(
+        R.drawable.outline_favorite_border_24,
+        R.drawable.baseline_favorite_24
+    )
+    var pressedFavoriteButton by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isFavorited by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect (selectedFavoriteButton) {
+    LaunchedEffect (pressedFavoriteButton) {
 
-        if (selectedFavoriteButton == null) {
-            postForTradingViewModel.isFavoritedPost(
-                tag,
-                myUid,
-                postDetails.postID,
-            ) { getIsFavorited ->
+        if (pressedFavoriteButton == null) {
+            tradingPostViewModel.isFavoritedPost(tag, myUid, postDetails.postID) { getIsFavorited ->
                 isFavorited = getIsFavorited
 
                 if (isFavorited) favoriteIconIdx = 1
@@ -214,10 +259,10 @@ fun PostForTradingFooter(
             }
         }
         else {
-            if (selectedFavoriteButton!!) {
+            if (pressedFavoriteButton!!) {
 
                 if (isFavorited) {
-                    postForTradingViewModel.unfavoritePost(tag, myUid, postDetails.postID) { isSuccessful ->
+                    tradingPostViewModel.unfavoritePost(tag, myUid, postDetails.postID) { isSuccessful ->
 
                         if (isSuccessful) {
                             isFavorited = false
@@ -227,11 +272,11 @@ fun PostForTradingFooter(
                             Toast.makeText(currentContext, "찜 취소 실패. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                         }
 
-                        selectedFavoriteButton = false
+                        pressedFavoriteButton = false
                     }
                 }
                 else {
-                    postForTradingViewModel.favoritePost(tag, myUid, postDetails.postID) { isSuccessful ->
+                    tradingPostViewModel.favoritePost(tag, myUid, postDetails.postID) { isSuccessful ->
 
                         if (isSuccessful) {
                             isFavorited = true
@@ -241,7 +286,7 @@ fun PostForTradingFooter(
                             Toast.makeText(currentContext, "찜하기 실패. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                         }
 
-                        selectedFavoriteButton = false
+                        pressedFavoriteButton = false
                     }
                 }
             }
@@ -269,8 +314,8 @@ fun PostForTradingFooter(
                 modifier = Modifier
                     .size(20.dp)
                     .clickable {
-                        if ((selectedFavoriteButton == null) || (!(selectedFavoriteButton!!))) {
-                            selectedFavoriteButton = true
+                        if ((pressedFavoriteButton == null) || (!(pressedFavoriteButton!!))) {
+                            pressedFavoriteButton = true
                         }
                     },
                 tint = Color.White,
@@ -318,16 +363,17 @@ fun PostForTradingFooter(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PostForTradingBody(
+fun TradingPostBody(
     tag : String,
     modifier : Modifier,
+    backStackEntryId : String,
     bodyLazyListState : LazyListState,
     postDetails: PostDetails,
-    mainNavController : NavHostController,
-    selectedPostDetails : (PostDetails) -> Unit,
-    getUserInfo : (getUserUid : Int?, getUserId : String?) -> Unit,
+    mainNavController : NavHostController
 ){
+    var pressedUserProfile by rememberSaveable { mutableStateOf(false) }
     var needLoadOtherTradingPostsList by rememberSaveable { mutableStateOf(true) }
     val getOtherTradingPostsList = rememberSaveable { mutableListOf<PostDetails>() }
     var otherTradingPostsList by rememberSaveable { mutableStateOf< List<PostDetails> >(listOf()) }
@@ -336,10 +382,10 @@ fun PostForTradingBody(
         pageCount = { postDetails.postDetailsTrading!!.productImagesForGet!!.size }
     )
 
-    if (needLoadOtherTradingPostsList) {
-        // get other trading posts list
-        LaunchedEffect(Unit) {
+    // get other trading posts list
+    LaunchedEffect(needLoadOtherTradingPostsList) {
 
+        if (needLoadOtherTradingPostsList) {
             getPostsList(
                 tag,
                 PostCategories.TRADING.value,
@@ -354,9 +400,23 @@ fun PostForTradingBody(
                     otherTradingPostsList = getOtherTradingPostsList.toList()
                     otherTradingPostsListSize = getOtherTradingPostsList.size
                 }
-
-                needLoadOtherTradingPostsList = false
             }
+
+            needLoadOtherTradingPostsList = false
+        }
+    }
+
+    LaunchedEffect(pressedUserProfile) {
+
+        if (pressedUserProfile) {
+            mainNavController.currentBackStackEntry?.savedStateHandle?.set("user_id", postDetails.posterID)
+            mainNavController.currentBackStackEntry?.savedStateHandle?.set("user_uid", postDetails.posterUID)
+            MainNavGraphClickListener.navigate(
+                backStackEntryId,
+                MainNavigationGraph.USERTRADINGPOSTSLIST.name,
+                mainNavController
+            )
+            pressedUserProfile = false
         }
     }
 
@@ -371,7 +431,7 @@ fun PostForTradingBody(
                 state = pagerState
             ) { pageNumber ->
                 AsyncImage(
-                    model = postDetails.postDetailsTrading!!.productImagesForGet!![pageNumber].first,
+                    model = postDetails.postDetailsTrading!!.productImagesForGet!![pageNumber].url,
                     modifier = Modifier
                         .fillParentMaxWidth()
                         .height(400.dp),
@@ -388,7 +448,7 @@ fun PostForTradingBody(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 12.dp)
-                        .clickable { getUserInfo(postDetails.posterUID, postDetails.posterID) },
+                        .clickable { pressedUserProfile = true },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // user's profile image
@@ -419,7 +479,7 @@ fun PostForTradingBody(
                     color = Color(0xFF636365)
                 )
 
-                PostForTradingContent(postDetails)
+                TradingPostContent(postDetails)
                 Spacer(modifier = Modifier.size(16.dp))
                 HorizontalDivider(
                     thickness = 1.dp,
@@ -432,13 +492,13 @@ fun PostForTradingBody(
         // user's other products
         item {
             Column (
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(8.dp, 16.dp)
             ) {
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { getUserInfo(postDetails.posterUID, postDetails.posterID) },
+                        .padding(horizontal = 8.dp)
+                        .clickable { pressedUserProfile = true },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -455,49 +515,27 @@ fun PostForTradingBody(
                     )
                 }
 
+                // user's other trading posts list
                 Column ( modifier = Modifier.padding(vertical = 16.dp) ) {
-                    if (otherTradingPostsListSize > 0){
-                        Row ( modifier = Modifier.fillMaxWidth() ) {
-                            PreviewOtherProduct(
-                                tag = tag,
-                                postDetails = otherTradingPostsList[0],
-                                modifier = Modifier.weight(1f)
-                            ) { getSelectedPostDetails ->
-                                selectedPostDetails(getSelectedPostDetails)
-                            }
-                            Spacer(modifier = Modifier.size(16.dp))
+                    for (startIdx : Int in 0..1){
+                        Row (modifier = Modifier.fillMaxWidth()) {
+                            for (idx : Int in (startIdx * 2)..(startIdx * 2 + 1)){
+                                if (idx < otherTradingPostsListSize) {
+                                    PreviewOtherProduct(
+                                        tag = tag,
+                                        postDetails = otherTradingPostsList[idx],
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(horizontal = 8.dp)
+                                    ) { selectedPostId ->
 
-                            if (otherTradingPostsListSize > 1){
-                                PreviewOtherProduct(
-                                    tag = tag,
-                                    postDetails = otherTradingPostsList[1],
-                                    modifier = Modifier.weight(1f)
-                                ) { getSelectedPostDetails ->
-                                    selectedPostDetails(getSelectedPostDetails)
-                                }
-                            }
-                        }
-                        Spacer(modifier = Modifier.size(24.dp))
-                    }
-
-                    if (otherTradingPostsListSize > 2){
-                        Row ( modifier = Modifier.fillMaxWidth() ) {
-                            PreviewOtherProduct(
-                                tag = tag,
-                                postDetails = otherTradingPostsList[2],
-                                modifier = Modifier.weight(1f)
-                            ) { getSelectedPostDetails ->
-                                selectedPostDetails(getSelectedPostDetails)
-                            }
-                            Spacer(modifier = Modifier.size(16.dp))
-
-                            if (otherTradingPostsListSize > 3){
-                                PreviewOtherProduct(
-                                    tag = tag,
-                                    postDetails = otherTradingPostsList[3],
-                                    modifier = Modifier.weight(1f)
-                                ) { getSelectedPostDetails ->
-                                    selectedPostDetails(getSelectedPostDetails)
+                                        mainNavController.currentBackStackEntry?.savedStateHandle?.set("post_id", selectedPostId)
+                                        MainNavGraphClickListener.navigate(
+                                            backStackEntryId,
+                                            MainNavigationGraph.TRADINGPOST.name,
+                                            mainNavController
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -508,8 +546,9 @@ fun PostForTradingBody(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PostForTradingContent(
+fun TradingPostContent(
     postDetails: PostDetails
 ){
     Column (
@@ -540,35 +579,10 @@ fun PreviewOtherProduct(
     tag : String,
     postDetails: PostDetails,
     modifier: Modifier,
-    selectedPostDetails : (PostDetails) -> Unit
+    selectPostId : (Int) -> Unit
 ){
-    val currentContext = LocalContext.current
-    var isSelected by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(isSelected) {
-
-        if (isSelected){
-            getSelectedPostDetails(tag, postDetails.postID){ getPostDetails, isSuccessful ->
-                if (isSuccessful){
-
-                    if (getPostDetails != null){
-                        selectedPostDetails(getPostDetails)
-                    }
-                    else{
-                        Toast.makeText(currentContext, "존재하지 않는 게시글입니다.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                else {
-                    Toast.makeText(currentContext, "서버 에러", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            isSelected = false
-        }
-    }
-
     Column (
-        modifier = modifier.clickable { isSelected = true }
+        modifier = modifier.clickable { selectPostId(postDetails.postID) }
     ) {
         AsyncImage(
             modifier = Modifier
