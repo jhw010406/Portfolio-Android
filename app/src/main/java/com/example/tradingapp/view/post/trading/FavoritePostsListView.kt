@@ -18,21 +18,19 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,7 +44,7 @@ import com.example.tradingapp.model.data.user.UserInformation
 import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
 import com.example.tradingapp.model.viewmodel.post.FavoritePostsListViewModel
 import com.example.tradingapp.model.viewmodel.post.getPostsList
-import com.example.tradingapp.view.LoadingView
+import com.example.tradingapp.view.other.LoadingView
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -66,7 +64,7 @@ fun FavoritePostsListView(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF212123))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             FavoritePostsListViewHeader(mainNavController = mainNavController)
 
@@ -89,8 +87,7 @@ fun FavoritePostsListViewHeader(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight(align = Alignment.CenterVertically),
-            color = Color(0xFF212123)
+                .wrapContentHeight(align = Alignment.CenterVertically)
         ) {
             Row (
                 modifier = Modifier
@@ -102,17 +99,12 @@ fun FavoritePostsListViewHeader(
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                     modifier = Modifier.clickable { mainNavController.popBackStack() },
-                    tint = Color.White,
                     contentDescription = "back",
                 )
-                Text(text = "관심목록", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                Text(text = "관심목록", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
         }
-        HorizontalDivider(
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 0.dp),
-            color = Color(0xFF636365)
-        )
+        HorizontalDivider(thickness = 1.dp)
     }
 }
 

@@ -12,11 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,17 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tradingapp.model.data.navigation.HomeNavigationGraph
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
-import com.example.tradingapp.model.data.user.UserInformation
 import com.example.tradingapp.model.viewmodel.verify.LoginViewModel
 import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
+import com.example.tradingapp.utils.ui.theme.getTextFieldColors
 
 @Composable
 fun RegisterView(
@@ -60,15 +57,12 @@ fun RegisterView(
             "비밀번호는 숫자, 영어 대소문자 조합 10자 이상, 20자 이내여야 합니다."
         )
     )
-    val noticeRequirementsColor : List<Color> = listOf(Color.White, Color.Red)
+    val noticeRequirementsColor : List<Color> = listOf(MaterialTheme.colorScheme.onSurface, Color.Red)
     var isWrongInputID by rememberSaveable { mutableStateOf(0) }
     var isWrongInputPW by rememberSaveable { mutableStateOf(0) }
     val currentContext = LocalContext.current
 
-    Surface (
-        modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF212123)
-    ){
+    Surface (modifier = Modifier.fillMaxSize()){
         Column (
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,15 +72,8 @@ fun RegisterView(
             Column (horizontalAlignment = Alignment.Start){
                 OutlinedTextField(
                     value = inputID,
-                    placeholder = { Text(text = "ID 입력", color = Color.White) },
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = Color.White,
-                        unfocusedContainerColor = Color(0x00000000),
-                        focusedContainerColor = Color(0x00000000),
-                        unfocusedIndicatorColor = Color(0xFF636365),
-                        focusedIndicatorColor = Color.White
-                    ),
+                    placeholder = { Text(text = "ID 입력") },
+                    colors = getTextFieldColors(),
                     singleLine = true,
                     onValueChange = { input -> if (restrictInputID(input)){ inputID = input } }
                 )
@@ -95,7 +82,9 @@ fun RegisterView(
                     text = noticeRequirementsText[0][isWrongInputID],
                     fontSize = 14.sp,
                     color = noticeRequirementsColor[isWrongInputID],
-                    modifier = Modifier.width(280.dp).wrapContentHeight()
+                    modifier = Modifier
+                        .width(280.dp)
+                        .wrapContentHeight()
                 )
             }
             Spacer(modifier = Modifier.size(36.dp))
@@ -104,15 +93,8 @@ fun RegisterView(
             Column (horizontalAlignment = Alignment.Start){
                 OutlinedTextField(
                     value = inputPW,
-                    placeholder = { Text(text = "비밀번호 입력", color = Color.White) },
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = Color.White,
-                        unfocusedContainerColor = Color(0x00000000),
-                        focusedContainerColor = Color(0x00000000),
-                        unfocusedIndicatorColor = Color(0xFF636365),
-                        focusedIndicatorColor = Color.White
-                    ),
+                    placeholder = { Text(text = "비밀번호 입력") },
+                    colors = getTextFieldColors(),
                     singleLine = true,
                     onValueChange = { input -> if (restrictInputPW(input)){ inputPW = input } }
                 )
@@ -121,7 +103,9 @@ fun RegisterView(
                     text = noticeRequirementsText[1][isWrongInputPW],
                     fontSize = 14.sp,
                     color = noticeRequirementsColor[isWrongInputPW],
-                    modifier = Modifier.width(280.dp).wrapContentHeight()
+                    modifier = Modifier
+                        .width(280.dp)
+                        .wrapContentHeight()
                 )
             }
             Spacer(modifier = Modifier.size(40.dp))
@@ -135,7 +119,11 @@ fun RegisterView(
                         if (CheckRightID(inputID) && CheckRightPW(inputPW)) {
                             isWrongInputID = 0
                             isWrongInputPW = 0
-                            loginViewModel.Register(tag, inputID, inputPW) { getUserInformation, isSuccessful ->
+                            loginViewModel.Register(
+                                tag,
+                                inputID,
+                                inputPW
+                            ) { getUserInformation, isSuccessful ->
 
                                 // register success
                                 if (isSuccessful) {
@@ -150,16 +138,28 @@ fun RegisterView(
                                 else {
                                     isWrongInputID = 0
                                     isWrongInputPW = 0
-                                    Toast.makeText(currentContext, "계정 생성 실패. 다시 시도해주세요.", LENGTH_SHORT).show()
+                                    Toast
+                                        .makeText(
+                                            currentContext,
+                                            "계정 생성 실패. 다시 시도해주세요.",
+                                            LENGTH_SHORT
+                                        )
+                                        .show()
                                 }
                             }
                         } else {
 
-                            if (CheckRightID(inputID)) { isWrongInputID = 0 }
-                            else { isWrongInputID = 1 }
+                            if (CheckRightID(inputID)) {
+                                isWrongInputID = 0
+                            } else {
+                                isWrongInputID = 1
+                            }
 
-                            if (CheckRightPW(inputPW)) { isWrongInputPW = 0 }
-                            else { isWrongInputPW = 1 }
+                            if (CheckRightPW(inputPW)) {
+                                isWrongInputPW = 0
+                            } else {
+                                isWrongInputPW = 1
+                            }
                         }
                     },
                 shape = RoundedCornerShape(12),

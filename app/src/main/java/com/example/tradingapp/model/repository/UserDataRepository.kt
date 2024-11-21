@@ -3,8 +3,6 @@ package com.example.tradingapp.model.repository
 import android.util.Log
 import com.example.tradingapp.model.data.user.UserCertificate
 import com.example.tradingapp.model.data.user.UserInformation
-import com.example.tradingapp.model.repository.local.LocalUserCertificateGraph
-import com.example.tradingapp.model.repository.local.LocalUserCertificateRepository
 import com.example.tradingapp.model.repository.retrofit.LoginRetrofit
 import retrofit2.Call
 import retrofit2.Callback

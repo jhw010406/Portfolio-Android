@@ -1,18 +1,15 @@
 package com.example.tradingapp.view.post.trading
 
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,8 +32,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,13 +43,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
@@ -60,19 +59,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.example.tradingapp.R
-import com.example.tradingapp.model.data.post.Image
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
+import com.example.tradingapp.model.data.post.Image
 import com.example.tradingapp.model.data.post.PostDetails
-import com.example.tradingapp.model.viewmodel.post.WritePostForTradingViewModel
 import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
 import com.example.tradingapp.model.viewmodel.other.selectOptimalContractForMedia
+import com.example.tradingapp.model.viewmodel.post.WritePostForTradingViewModel
 import com.example.tradingapp.model.viewmodel.post.getSelectedPostDetails
-import com.example.tradingapp.view.LoadingView
+import com.example.tradingapp.utils.ui.theme.getTextFieldColors
+import com.example.tradingapp.view.other.LoadingView
+import com.example.tradingapp.view.other.RootSnackbar
 
 @Composable
 fun WritePostForTradingView(
@@ -122,17 +122,13 @@ fun WritePostForTradingView(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFF212123))
+                .background(MaterialTheme.colorScheme.background)
         ){
             LazyColumn ( modifier = Modifier.weight(1f) ) {
                 // header
                 item {
                     WritePostForTradingScreenHeader(mainNavController)
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(horizontal = 0.dp),
-                        color = Color(0xFF636365)
-                    )
+                    HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 0.dp))
                 }
 
                 // body
@@ -142,11 +138,7 @@ fun WritePostForTradingView(
             }
 
             // footer
-            Surface (
-                modifier = Modifier
-                    .padding(horizontal = 12.dp),
-                color = Color(0xFF212123)
-            ){
+            Surface (modifier = Modifier.padding(horizontal = 12.dp)){
                 WritePostForTradingScreenFooter(
                     tag,
                     isForUpdate,
@@ -170,14 +162,17 @@ fun WritePostForTradingScreenHeader(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(align = Alignment.CenterVertically)
-            .background(color = Color(0xFF212123))
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ){
         Row (
             modifier = Modifier
-                .clickable {
+                .clickable(
+                    interactionSource = null,
+                    indication = null
+                ) {
                     if (currentDestinationView.equals(MainNavigationGraph.WRITEPOSTFORTRADING.name)){
                         mainNavController.popBackStack()
                     }
@@ -186,14 +181,13 @@ fun WritePostForTradingScreenHeader(
         ){
             Icon(
                 painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                tint = Color.White,
                 contentDescription = "back",
             )
             Spacer(modifier = Modifier.size(8.dp))
+
             Text(text = "내 물건 팔기",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
             )
         }
     }
@@ -246,7 +240,6 @@ fun UploadImagesForTrading(
     postDetails : WritePostForTradingViewModel
 ){
     val currentContext = LocalContext.current
-    val contentResolver = LocalContext.current.contentResolver
     var currentImagesCount = postDetails.selectedImages.size
     val getMultipleImageLauncher = rememberLauncherForActivityResult(
         contract = selectOptimalContractForMedia(currentImagesCount)
@@ -268,32 +261,26 @@ fun UploadImagesForTrading(
                 currentImagesCount = getCurrentImagesCount
             }
         }
-
-        Log.d(tag, "current images count : ${currentImagesCount}")
     }
     var imageCountTextColor : Color
 
     Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
+        modifier = Modifier.fillMaxWidth().wrapContentHeight()
     ){
         // upload images button
         Spacer(modifier = Modifier.size(16.dp))
         Surface (
-            modifier = Modifier
-                .size(68.dp),
+            modifier = Modifier.size(68.dp),
             shape = RoundedCornerShape(8.dp),
-            color = Color(0xFF212123),
-            border = BorderStroke(
-                width = 1.dp,
-                color = Color(0xFF51545B)
-            )
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline)
         ){
             Column (
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable {
+                    .clickable(
+                        interactionSource = null,
+                        indication = null
+                    ) {
                         if (postDetails.selectedImages.size < 10) {
                             getMultipleImageLauncher.launch(
                                 PickVisualMediaRequest(
@@ -334,37 +321,30 @@ fun UploadImagesForTrading(
         Spacer(modifier = Modifier.size(12.dp))
 
         // The list of the images that is uploaded
-        LazyRow (
-            modifier = Modifier
-                .fillMaxSize(),
-        ){
+        LazyRow (modifier = Modifier.fillMaxSize()){
             itemsIndexed(
                 items = postDetails.selectedImages.toList(),
-                key = { index: Int, image: Image? ->
-                    index
-                }
+                key = { index: Int, image: Image? -> index }
             ){  index: Int, image: Image ->
                 Spacer(modifier = Modifier.size(12.dp))
-                Box (
-                    modifier = Modifier
-                        .size(68.dp),
-                ){
+
+                Box (modifier = Modifier.size(68.dp)){
                     // image
                     Surface (
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        shape = RoundedCornerShape(8.dp),
-                        color = Color(0xFF212123)
+                        modifier = Modifier.fillMaxSize(),
+                        shape = RoundedCornerShape(8.dp)
                     ){
                         if (image.file != null) {
                             AsyncImage(
                                 model = image.file!!.getUri(),
+                                contentScale = ContentScale.Crop,
                                 contentDescription = "product image"
                             )
                         }
                         else {
                             AsyncImage(
                                 model = image.url,
+                                contentScale = ContentScale.Crop,
                                 contentDescription = "product image"
                             )
                         }
@@ -389,11 +369,11 @@ fun UploadImagesForTrading(
                                 Log.d(tag, "current images count : ${currentImagesCount}")
                             },
                         shape = CircleShape,
-                        color = Color(0xFFEAEBEF)
+                        color = MaterialTheme.colorScheme.onSurface
                     ){
                         Icon(
                             painter = painterResource(id = R.drawable.outline_close_24),
-                            tint = Color(0xFF212123),
+                            tint = MaterialTheme.colorScheme.surface,
                             contentDescription = "remove image"
                         )
                     }
@@ -413,8 +393,9 @@ fun WritePostTitle(
             .fillMaxWidth()
             .wrapContentHeight()
     ){
-        Text(text = "제목", fontWeight = FontWeight.Bold, color = Color.White)
+        Text(text = "제목", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.size(16.dp))
+
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -425,7 +406,8 @@ fun WritePostTitle(
                 if (!input.any{ char -> char == '\n' }){
                     postDetails.title.value = input
                 }
-            }
+            },
+            colors = getTextFieldColors()
         )
     }
 }
@@ -434,48 +416,46 @@ fun WritePostTitle(
 fun SelectHowToTrade(
     postDetails : WritePostForTradingViewModel
 ){
-    var toSellButtonColor : Color = Color(0xFFCFD3DC)
-    var toSellButtonTextColor : Color = Color(0xFF212123)
-    var toSellButtonBorder : BorderStroke? = null
-    var toGiveButtonColor : Color = Color(0xFFCFD3DC)
-    var toGiveButtonTextColor : Color = Color(0xFF212123)
-    var toGiveButtonBorder : BorderStroke? = null
+    var toSellButtonColor : Color
+    var toSellButtonTextColor : Color
+    var toSellButtonBorder : BorderStroke?
+    var toGiveButtonColor : Color
+    var toGiveButtonTextColor : Color
+    var toGiveButtonBorder : BorderStroke?
+    val activeButtonColor : Color
+
+    if (isSystemInDarkTheme()) { activeButtonColor = Color(0xFFCFD3DC) }
+    else { activeButtonColor = Color(0xFF212123) }
 
     Column (
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
     ){
-        Text(
-            text = "거래 방식",
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
+        Text(text = "거래 방식", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.size(16.dp))
 
-        Row (
-
-        ){
+        Row {
             if (postDetails.forSelling.value){
-                toSellButtonColor = Color(0xFFCFD3DC)
-                toSellButtonTextColor = Color(0xFF212123)
+                toSellButtonColor = activeButtonColor
+                toSellButtonTextColor = MaterialTheme.colorScheme.surface
                 toSellButtonBorder = null
-                toGiveButtonColor = Color(0xFF212123)
-                toGiveButtonTextColor = Color.White
+                toGiveButtonColor = MaterialTheme.colorScheme.surface
+                toGiveButtonTextColor = MaterialTheme.colorScheme.onSurface
                 toGiveButtonBorder = BorderStroke(
                     width = 1.dp,
-                    color = Color(0xFF636365)
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
             else{
-                toSellButtonColor = Color(0xFF212123)
-                toSellButtonTextColor = Color.White
+                toSellButtonColor = MaterialTheme.colorScheme.surface
+                toSellButtonTextColor = MaterialTheme.colorScheme.onSurface
                 toSellButtonBorder = BorderStroke(
                     width = 1.dp,
-                    color = Color(0xFF636365)
+                    color = MaterialTheme.colorScheme.outline
                 )
-                toGiveButtonColor = Color(0xFFCFD3DC)
-                toGiveButtonTextColor = Color(0xFF212123)
+                toGiveButtonColor = activeButtonColor
+                toGiveButtonTextColor = MaterialTheme.colorScheme.surface
                 toGiveButtonBorder = null
             }
 
@@ -525,7 +505,7 @@ fun SelectHowToTrade(
                     },
                 maxLines = 1,
                 placeholder = { Text(text = "가격을 입력해주세요.", color = Color(0xFF858C94)) },
-                prefix = { Text(text = "₩ ", color = Color(0xFF858C94)) },
+                prefix = { Text(text = "₩ ") },
                 value = postDetails.productPrice.value,
                 onValueChange = { input ->
                     if (
@@ -535,7 +515,8 @@ fun SelectHowToTrade(
                         postDetails.productPrice.value = postDetails.getValidPrice(input)
                     }
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                colors = getTextFieldColors()
             )
             Spacer(modifier = Modifier.size(16.dp))
 
@@ -551,20 +532,19 @@ fun SelectHowToTrade(
             ){
                 Checkbox(
                     modifier = Modifier.size(20.dp),
+                    colors = CheckboxDefaults.colors(
+                        uncheckedColor = MaterialTheme.colorScheme.outline,
+                        checkedColor = Color(0xFFFF6E1D),
+                        checkmarkColor = Color.White
+                    ),
                     checked = postDetails.acceptNegotiation.value,
-                    onCheckedChange = { input ->
-                        postDetails.acceptNegotiation.value = input
-                    }
+                    onCheckedChange = { input -> postDetails.acceptNegotiation.value = input }
                 )
                 Spacer(modifier = Modifier.size(8.dp))
+
                 Text(
                     text = "가격 제안 받기",
-                    color = Color.White,
-                    style = TextStyle(
-                        platformStyle = PlatformTextStyle(
-                            includeFontPadding = false
-                        )
-                    )
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
                 )
             }
         }
@@ -584,12 +564,16 @@ fun SelectHowToTrade(
                     checked = postDetails.acceptFreebieRequest.value,
                     onCheckedChange = { input ->
                         postDetails.acceptFreebieRequest.value = input
-                    }
+                    },
+                    colors = CheckboxDefaults.colors(
+                        uncheckedColor = MaterialTheme.colorScheme.outline,
+                        checkedColor = Color(0xFFFF6E1D),
+                        checkmarkColor = Color.White
+                    )
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
                     text = "나눔 신청 받기",
-                    color = Color.White,
                     style = TextStyle(
                         platformStyle = PlatformTextStyle(
                             includeFontPadding = false
@@ -611,12 +595,9 @@ fun WriteProductDetails(
             .fillMaxWidth()
             .wrapContentHeight()
     ){
-        Text(
-            text = "자세한 설명",
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
+        Text(text = "자세한 설명", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.size(16.dp))
+
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -634,7 +615,8 @@ fun WriteProductDetails(
             value = postDetails.content.value,
             onValueChange = { input ->
                 postDetails.content.value = input
-            }
+            },
+            colors = getTextFieldColors()
         )
     }
 }
@@ -648,27 +630,20 @@ fun SelectTradingLocation(
             .fillMaxWidth()
             .wrapContentHeight()
     ){
-        Text(
-            text = "거래 방식",
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
+        Text(text = "거래 방식", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.size(16.dp))
+
         OutlinedTextField(
             readOnly = true,
             modifier = Modifier.fillMaxWidth(),
             maxLines = 1,
             placeholder = {
                 Row (
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Text(
-                        text = "장소 선택",
-                        color = Color(0xFF858C94)
-                    )
+                    Text(text = "장소 선택", color = Color(0xFF858C94))
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
                         tint = Color(0xFF858C94),
@@ -679,7 +654,8 @@ fun SelectTradingLocation(
             value = postDetails.location.value,
             onValueChange = { input ->
                 postDetails.location.value = input
-            }
+            },
+            colors = getTextFieldColors()
         )
     }
 }
@@ -703,11 +679,11 @@ fun WritePostForTradingScreenFooter(
                 postDetails.updatePostForTrading(tag, postDetails.postId!!, myUid) { isSuccessful ->
 
                     if (isSuccessful) {
-                        Toast.makeText(currentContext, "게시글 수정 완료", LENGTH_SHORT).show()
+                        RootSnackbar.show("게시글 수정 완료")
                         mainNavController.popBackStack()
                     }
                     else {
-                        Toast.makeText(currentContext, "서버 에러", LENGTH_SHORT).show()
+                        RootSnackbar.show("서버 에러")
                     }
                 }
             }
@@ -715,11 +691,11 @@ fun WritePostForTradingScreenFooter(
                 postDetails.uploadPostForTrading(tag, myUid) { isSuccessful ->
 
                     if (isSuccessful) {
-                        Toast.makeText(currentContext, "게시글 작성 완료", LENGTH_SHORT).show()
+                        RootSnackbar.show("게시글 작성 완료")
                         mainNavController.popBackStack()
                     }
                     else {
-                        Toast.makeText(currentContext, "서버 에러", LENGTH_SHORT).show()
+                        RootSnackbar.show("서버 에러")
                     }
                 }
             }

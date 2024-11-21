@@ -1,22 +1,20 @@
 package com.example.tradingapp.view.profile
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,7 +45,7 @@ fun SettingOptionsView (
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF212123))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SettingOptionsViewHeader(mainNavController)
 
@@ -62,23 +60,18 @@ fun SettingOptionsViewHeader (
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFF212123))
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = 12.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ){
         Icon(
             painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-            tint = Color.White,
             modifier = Modifier.clickable { mainNavController.popBackStack() },
             contentDescription = "back"
         )
     }
-    HorizontalDivider(
-        thickness = 1.dp,
-        modifier = Modifier.fillMaxWidth(),
-        color = Color(0xFF636365)
-    )
+    HorizontalDivider(thickness = 1.dp, modifier = Modifier.fillMaxWidth(),)
 }
 
 @Composable
@@ -105,12 +98,9 @@ fun SettingOptionsViewBody (
                 Text(
                     text = "자동 로그인",
                     fontSize = 20.sp,
-                    style = TextStyle(
-                        platformStyle = PlatformTextStyle(
-                            includeFontPadding = false
-                        )
-                    ),
-                    color = Color.White)
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+                )
+
                 Checkbox(
                     checked = keepLogin,
                     modifier = Modifier.size(24.dp),
@@ -118,14 +108,15 @@ fun SettingOptionsViewBody (
                         keepLogin = !keepLogin
                         userCertificate.keepLogin = keepLogin
                         settingOptionsViewModel.updateKeepLogin(tag, keepLogin)
-                    }
+                    },
+                    colors = CheckboxDefaults.colors(
+                        uncheckedColor = MaterialTheme.colorScheme.outline,
+                        checkedColor = Color(0xFFFF6E1D),
+                        checkmarkColor = Color.White
+                    )
                 )
             }
-            HorizontalDivider(
-                thickness = 1.dp,
-                modifier = Modifier.fillMaxWidth(),
-                color = Color(0xFF636365)
-            )
+            HorizontalDivider(thickness = 1.dp, modifier = Modifier.fillMaxWidth())
         }
     }
 }

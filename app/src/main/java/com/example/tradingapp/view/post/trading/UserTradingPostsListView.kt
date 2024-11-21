@@ -1,8 +1,6 @@
 package com.example.tradingapp.view.post.trading
 
 import android.os.Build
-import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +18,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,14 +41,11 @@ import androidx.navigation.NavHostController
 import com.example.tradingapp.R
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
-import com.example.tradingapp.model.viewmodel.post.getPostsList
-import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.user.UserInformation
 import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
-import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
 import com.example.tradingapp.model.viewmodel.post.UserPostsListViewModel
-import com.example.tradingapp.view.LoadingBar
-import com.example.tradingapp.view.LoadingView
+import com.example.tradingapp.model.viewmodel.post.getPostsList
+import com.example.tradingapp.view.other.LoadingView
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -72,7 +68,7 @@ fun UserPostsListView(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF212123))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             UserPostsListHeader(mainNavController = mainNavController)
 
@@ -83,7 +79,7 @@ fun UserPostsListView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row ( horizontalArrangement = Arrangement.Center) {
-                    Text(text = "판매중", fontWeight = FontWeight.SemiBold, color = Color.White)
+                    Text(text = "판매중", fontWeight = FontWeight.SemiBold)
                 }
 
                 UserPostsList(
@@ -101,16 +97,13 @@ fun UserPostsListView(
 
 @Composable
 fun UserPostsListHeader(
-    barColor : Color = Color(0xFF212123),
-    dividerColor : Color = Color(0xFF636365),
     mainNavController : NavHostController
 ){
     Column {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight(align = Alignment.CenterVertically),
-            color = barColor
+                .wrapContentHeight(align = Alignment.CenterVertically)
         ) {
             Row (
                 modifier = Modifier
@@ -122,16 +115,11 @@ fun UserPostsListHeader(
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                     modifier = Modifier.clickable { mainNavController.popBackStack() },
-                    tint = Color.White,
                     contentDescription = "back",
                 )
             }
         }
-        HorizontalDivider(
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 0.dp),
-            color = dividerColor
-        )
+        HorizontalDivider(thickness = 1.dp)
     }
 }
 
@@ -144,14 +132,12 @@ fun UserPostsListProfile(
     val targetID = if (isMyPostsList) { "나" } else { userId }
 
     Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(text = "${targetID}의 판매내역", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+            Text(text = "${targetID}의 판매내역", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.size(12.dp))
 
             if (isMyPostsList){
@@ -172,8 +158,7 @@ fun UserPostsListProfile(
         }
 
         Surface (
-            modifier = Modifier
-                .size(60.dp),
+            modifier = Modifier.size(60.dp),
             RoundedCornerShape(100)
         ) {
 
@@ -233,11 +218,7 @@ fun UserPostsList(
         ){  index, post ->
 
             if (index > 0){
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    color = Color(0xFF636365)
-                )
+                HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 12.dp))
             }
 
             PreviewTradingPost(

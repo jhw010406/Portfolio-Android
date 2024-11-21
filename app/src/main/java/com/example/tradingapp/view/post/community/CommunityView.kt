@@ -1,5 +1,6 @@
 package com.example.tradingapp.view.post.community
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,7 +45,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -56,7 +57,6 @@ import com.example.tradingapp.model.data.post.PostSubject
 import com.example.tradingapp.model.viewmodel.chat.ChatViewModel
 import com.example.tradingapp.model.viewmodel.home.CommunityViewModel
 
-@Preview
 @Composable
 fun CommunityView(
     tag : String
@@ -64,7 +64,7 @@ fun CommunityView(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF212123))
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
         // categories List
         CommunityViewHeader()
@@ -78,8 +78,7 @@ fun CommunityViewHeader(){
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(align = Alignment.CenterVertically),
-        color = Color(0xFF212123)
+            .wrapContentHeight(align = Alignment.CenterVertically)
     ) {
         Row (
             modifier = Modifier
@@ -91,34 +90,28 @@ fun CommunityViewHeader(){
             // location
             Row (
                 modifier = Modifier
-                    .clickable {
-
-                    },
+                    .clickable(
+                        interactionSource = null,
+                        indication = null
+                    ) {},
                 horizontalArrangement = Arrangement.Start
             ){
                 Text(text = "location",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                    tint = Color.White,
                     contentDescription = "select living location",
-                    modifier = Modifier
-                        .rotate(-90f)
-                        .offset(x = 4.dp)
+                    modifier = Modifier.rotate(-90f).offset(x = 4.dp)
                 )
             }
 
             // others
-            Row (
-                horizontalArrangement = Arrangement.Center
-            ){
+            Row (horizontalArrangement = Arrangement.Center){
                 // my profile
                 Icon(painter = painterResource(id = R.drawable.outline_sentiment_satisfied_24),
-                    tint = Color.White,
                     contentDescription = "edit profile",
                     modifier = Modifier.size(28.dp)
                 )
@@ -126,7 +119,6 @@ fun CommunityViewHeader(){
 
                 // search product
                 Icon(painter = painterResource(id = R.drawable.baseline_search_24),
-                    tint = Color.White,
                     contentDescription = "search product",
                     modifier = Modifier.size(28.dp)
                 )
@@ -134,26 +126,20 @@ fun CommunityViewHeader(){
 
                 // check notification
                 Icon(painter = painterResource(id = R.drawable.baseline_notifications_none_24),
-                    tint = Color.White,
                     contentDescription = "check notification",
                     modifier = Modifier.size(28.dp)
                 )
             }
         }
     }
-    HorizontalDivider(
-        thickness = 1.dp,
-        modifier = Modifier.padding(horizontal = 0.dp),
-        color = Color(0xFF636365)
-    )
+    HorizontalDivider(thickness = 1.dp)
 }
 
 @Composable
 fun CommunityViewBody(){
     val communityViewModel : CommunityViewModel = viewModel()
 
-    LazyColumn (
-    ) {
+    LazyColumn{
         item(
             key = "groupChatList"
         ){
@@ -172,10 +158,7 @@ fun CommunityViewBody(){
         item (
             key = "line"
         ){
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = Color(0xFF636365)
-            )
+            HorizontalDivider(thickness = 1.dp)
         }
 
         // posts list
@@ -211,12 +194,11 @@ fun CommunityViewBody(){
 @Composable
 fun PreviewGroupChatList(){
     val groupChatViewModel : ChatViewModel = viewModel()
-    
+
+    Log.d("theme_color", "${Color.White}\n${MaterialTheme.colorScheme.surface}")
+
     NavigationBar (
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        containerColor = Color(0xFF212123)
+        modifier = Modifier.fillMaxWidth().wrapContentHeight()
     ){
         LazyRow (
             modifier = Modifier
@@ -229,12 +211,7 @@ fun PreviewGroupChatList(){
             }
 
             item {
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(68.dp),
-                    thickness = 1.dp,
-                    color = Color(0xFF636365)
-                )
+                VerticalDivider(modifier = Modifier.height(68.dp), thickness = 1.dp)
                 Spacer(modifier = Modifier.size(12.dp))
             }
 
@@ -273,40 +250,30 @@ class FindOtherGroupsIconShape : androidx.compose.ui.graphics.Shape {
 @Composable
 fun FindOtherGroupsItem(){
     Row (
-        modifier = Modifier
-            .wrapContentSize()
+        modifier = Modifier.wrapContentSize()
     ){
         Column (
             modifier = Modifier
                 .width(72.dp)
                 .height(88.dp)
-                .clickable {
-
-                },
+                .clickable {},
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){
-            Surface(
-                modifier = Modifier
-                    .size(48.dp),
-                color = Color(0xFF212123)
-            ){
+            Surface(modifier = Modifier.size(48.dp)){
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_group_24),
                     tint = Color(0xFFEA893F),
-                    modifier = Modifier
-                        .clip(FindOtherGroupsIconShape()),
+                    modifier = Modifier.clip(FindOtherGroupsIconShape()),
                     contentDescription = "search other groups"
                 )
             }
             Spacer(modifier = Modifier.size(4.dp))
             Text(
                 text = "모임 둘러보기",
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                fontSize = 10.sp,
-                color = Color.White
+                fontSize = 10.sp
             )
         }
         Spacer(modifier = Modifier.size(12.dp))
@@ -315,29 +282,19 @@ fun FindOtherGroupsItem(){
 
 @Composable
 fun PreviewGroupChatItem(groupChat : Chat){
-    Row (
-        modifier = Modifier
-            .wrapContentSize()
-    ){
+    Row (modifier = Modifier.wrapContentSize()){
         Column (
             modifier = Modifier
                 .width(72.dp)
                 .height(88.dp)
-                .clickable {
-
-                },
+                .clickable {},
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){
-            Box(
-                modifier = Modifier
-                    .size(48.dp),
-            ){
+            Box(modifier = Modifier.size(48.dp)){
                 Surface (
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.White
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(12.dp)
                 ){
                     Text(text = "Image")
                 }
@@ -345,19 +302,15 @@ fun PreviewGroupChatItem(groupChat : Chat){
                 Surface (
                     modifier = Modifier
                         .size(20.dp)
-                        .offset(
-                            x = 32.dp,
-                            y = 32.dp
-                        ),
+                        .offset(x = 32.dp, y = 32.dp),
                     shape = CircleShape,
                     color = Color(0xFFB2B6BF),
-                    border = BorderStroke(width = 1.dp, color = Color.Black)
+                    border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.surface)
                 ){
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_add_24),
                         tint = Color.White,
-                        modifier = Modifier
-                            .padding(4.dp),
+                        modifier = Modifier.padding(4.dp),
                         contentDescription = "add Icon"
                     )
                 }
@@ -366,14 +319,12 @@ fun PreviewGroupChatItem(groupChat : Chat){
 
             Text(
                 text = groupChat.title,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 softWrap = true,
                 lineHeight = 12.sp,
                 maxLines = 2,
                 fontSize = 10.sp,
-                color = Color.White,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -383,12 +334,7 @@ fun PreviewGroupChatItem(groupChat : Chat){
 
 @Composable
 fun CommunityCategoriesList(){
-    NavigationBar (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp),
-        containerColor = Color(0xFF212123)
-    ){
+    NavigationBar (modifier = Modifier.fillMaxWidth().height(64.dp)){
         val betweenSpace : Float = 8f
 
         LazyRow (
@@ -410,8 +356,7 @@ fun CommunityCategoriesList(){
                 Spacer(modifier = Modifier.size(betweenSpace.dp))
                 CommunitySubjectButton(
                     subjectName = "인기글",
-                    iconID = R.drawable.baseline_local_fire_department_24,
-                    colorValue = 0xFFFF5555
+                    iconID = R.drawable.baseline_local_fire_department_24
                 )
             }
 
@@ -465,19 +410,19 @@ fun CommunityCategoriesList(){
 @Composable
 fun CommunitySubjectButton(
     subjectName : String,
-    iconID : Int?,
-    colorValue : Long = 0xFFFFFFFF
+    iconID : Int?
 ){
-    Surface (
-        modifier = Modifier
-            .wrapContentWidth()
-            .height(36.dp),
-        color = Color(0xFF212123),
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, color = Color(0xFF636365)),
-        onClick = {
+    val colorValue : Color
 
-        }
+    if (subjectName == "인기글") { colorValue = Color(0xFFFF5555) }
+    else { colorValue = MaterialTheme.colorScheme.onPrimary }
+
+    Surface (
+        modifier = Modifier.wrapContentWidth().height(36.dp),
+        color = MaterialTheme.colorScheme.background,
+        shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.outline),
+        onClick = {}
     ){
         Row (
             modifier = Modifier.padding(horizontal = 12.dp),
@@ -486,18 +431,13 @@ fun CommunitySubjectButton(
             if (iconID != null){
                 Icon(
                     painter = painterResource(id = iconID),
-                    tint = Color(colorValue),
-                    modifier = Modifier
-                        .size(22.dp),
+                    modifier = Modifier.size(22.dp),
+                    tint = colorValue,
                     contentDescription = subjectName
                 )
                 Spacer(modifier = Modifier.size(4.dp))
             }
-            Text(
-                text = subjectName,
-                fontSize = 14.sp,
-                color = Color.White
-            )
+            Text(text = subjectName, fontSize = 14.sp)
         }
     }
 }
@@ -505,8 +445,7 @@ fun CommunitySubjectButton(
 @Composable
 fun PreviewCommunityPostsList(post : PostDetails){
     Column (
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ){
         Spacer(modifier = Modifier.size(16.dp))
         // The category of the post
@@ -521,8 +460,7 @@ fun PreviewCommunityPostsList(post : PostDetails){
                 modifier = Modifier
                     .wrapContentWidth()
                     .fillMaxHeight(),
-                shape = RoundedCornerShape(2.dp),
-                color = Color(0xFF09415C)
+                shape = RoundedCornerShape(2.dp)
             ){
                 /*
                 if (post.othersForCommunity?.isTrendingPost == true){
@@ -611,9 +549,6 @@ fun PreviewCommunityPostsList(post : PostDetails){
         )
         Spacer(modifier = Modifier.size(8.dp))
 
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = Color(0xFF636365)
-        )
+        HorizontalDivider(thickness = 1.dp)
     }
 }

@@ -2,9 +2,8 @@ package com.example.tradingapp.view.post.trading
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,11 +26,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +42,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -49,7 +52,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -66,8 +68,8 @@ import com.example.tradingapp.model.viewmodel.post.getAlphaValueForHeader
 import com.example.tradingapp.model.viewmodel.post.getPostsList
 import com.example.tradingapp.model.viewmodel.post.getSelectedPostDetails
 import com.example.tradingapp.model.viewmodel.post.getTimeLagFromNow
-import com.example.tradingapp.view.LoadingBar
-import com.example.tradingapp.view.LoadingView
+import com.example.tradingapp.view.other.LoadingView
+import com.example.tradingapp.view.other.RootSnackbar
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -104,7 +106,7 @@ fun TradingPostView(
                         loadedPost = true
                     }
                     else {
-                        Toast.makeText(currentContext, "게시글 접근에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                        RootSnackbar.show("게시글 접근에 실패했습니다. 다시 시도해주세요.")
                         mainNavController.currentBackStackEntry?.destination?.route.let {
 
                             if (it.equals(MainNavigationGraph.TRADINGPOST.name)){
@@ -114,7 +116,7 @@ fun TradingPostView(
                     }
                 }
                 else {
-                    Toast.makeText(currentContext, "존재하지 않는 게시글입니다.", Toast.LENGTH_SHORT).show()
+                    RootSnackbar.show("존재하지 않는 게시글입니다.")
                     homeViewModel.removeItemByPostId(postId)
                     homeViewModel.reloadPostsList.value = true
                     mainNavController.currentBackStackEntry?.destination?.route.let {
@@ -135,7 +137,7 @@ fun TradingPostView(
         Box (
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF212123))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Column {
                 TradingPostBody(
@@ -166,67 +168,92 @@ fun TradingPostHeader(
     bodyLazyListState : LazyListState,
     mainNavController: NavController
 ){
-    val barColor : Color by animateColorAsState(targetValue =
-        Color(getAlphaValueForHeader(
-            bodyLazyListState.firstVisibleItemIndex,
-            bodyLazyListState.firstVisibleItemScrollOffset ) + 0x212123
-        )
-    )
-    val dividerColor : Color by animateColorAsState(targetValue =
-        Color(getAlphaValueForHeader(
-            bodyLazyListState.firstVisibleItemIndex,
-            bodyLazyListState.firstVisibleItemScrollOffset ) + 0x636365
-        )
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val firstVisibleItemIndex by remember {
+        derivedStateOf { bodyLazyListState.firstVisibleItemIndex }
+    }
+    val firstVisibleItemScrollOffset by remember {
+        derivedStateOf { bodyLazyListState.firstVisibleItemScrollOffset }
+    }
+    val animateSurfaceAlpha by animateFloatAsState(targetValue =
+        getAlphaValueForHeader(firstVisibleItemIndex, firstVisibleItemScrollOffset)
     )
 
-    Column {
-        Surface(
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .drawBehind {
+                drawRect(
+                    color = surfaceColor,
+                    alpha = animateSurfaceAlpha
+                )
+            }
+    ) {
+        Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight(align = Alignment.CenterVertically),
-            color = barColor
-        ) {
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Box{
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                    modifier = Modifier.clickable { mainNavController.popBackStack() },
-                    tint = Color.White,
                     contentDescription = "back",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable { mainNavController.popBackStack() }
                 )
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
+                    contentDescription = "back",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .graphicsLayer { alpha = (1f - animateSurfaceAlpha) }
+                )
+            }
 
-                Row {
-                    // share the post
+            Row {
+                // share the post
+                Box {
                     Icon(painter = painterResource(id = R.drawable.outline_share_24),
-                        tint = Color.White,
                         contentDescription = "share the post",
                         modifier = Modifier
                             .size(28.dp)
                             .clickable {}
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
-
-                    // more
-                    Icon(painter = painterResource(id = R.drawable.baseline_more_vert_24),
+                    Icon(painter = painterResource(id = R.drawable.outline_share_24),
+                        contentDescription = "share the post",
                         tint = Color.White,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .graphicsLayer { alpha = (1f - animateSurfaceAlpha) }
+                    )
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+
+                // more
+                Box{
+                    Icon(painter = painterResource(id = R.drawable.baseline_more_vert_24),
                         contentDescription = "more functions for the post",
                         modifier = Modifier
                             .size(28.dp)
                             .clickable {}
                     )
+                    Icon(painter = painterResource(id = R.drawable.baseline_more_vert_24),
+                        contentDescription = "more functions for the post",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .graphicsLayer { alpha = (1f - animateSurfaceAlpha) }
+                    )
                 }
             }
         }
-        HorizontalDivider(
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 0.dp),
-            color = dividerColor
-        )
+        HorizontalDivider(thickness = 1.dp, modifier = Modifier.graphicsLayer { alpha = animateSurfaceAlpha })
     }
 }
 
@@ -269,7 +296,7 @@ fun TradingPostFooter(
                             favoriteIconIdx = 0
                         }
                         else {
-                            Toast.makeText(currentContext, "찜 취소 실패. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                            RootSnackbar.show("찜 취소 실패. 다시 시도해주세요.")
                         }
 
                         pressedFavoriteButton = false
@@ -283,7 +310,7 @@ fun TradingPostFooter(
                             favoriteIconIdx = 1
                         }
                         else {
-                            Toast.makeText(currentContext, "찜하기 실패. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                            RootSnackbar.show("찜하기 실패. 다시 시도해주세요.")
                         }
 
                         pressedFavoriteButton = false
@@ -293,16 +320,13 @@ fun TradingPostFooter(
         }
     }
 
-    HorizontalDivider(
-        thickness = 1.dp,
-        color = Color(0xFF636365)
-    )
+    HorizontalDivider(thickness = 1.dp)
     Row (
         modifier = Modifier
             .fillMaxWidth()
             .height(72.dp)
             .padding(horizontal = 16.dp)
-            .background(color = Color(0xFF212123)),
+            .background(MaterialTheme.colorScheme.background),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ){
@@ -311,6 +335,7 @@ fun TradingPostFooter(
         ) {
             Icon(
                 painter = painterResource(id = favoriteIcon[favoriteIconIdx]),
+                tint = Color(0xFF636365),
                 modifier = Modifier
                     .size(20.dp)
                     .clickable {
@@ -318,24 +343,23 @@ fun TradingPostFooter(
                             pressedFavoriteButton = true
                         }
                     },
-                tint = Color.White,
                 contentDescription = "favorite button"
             )
             Spacer(modifier = Modifier.size(16.dp))
 
-            VerticalDivider(
-                thickness = 1.dp,
-                modifier = Modifier.padding(vertical = 10.dp),
-                color = Color(0xFF636365)
-            )
+            VerticalDivider(thickness = 1.dp, modifier = Modifier.padding(vertical = 10.dp))
             Spacer(modifier = Modifier.size(16.dp))
 
             Column {
-                Text(text = "${addDelimiterToPrice(postDetails.postDetailsTrading!!.productPrice.toString())}원", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                Text(
+                    text = "${addDelimiterToPrice(postDetails.postDetailsTrading!!.productPrice.toString())}원",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+
                 Text(
                     text = "가격 제안하기",
-                    modifier = Modifier
-                        .clickable {},
+                    modifier = Modifier.clickable {},
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     textDecoration = TextDecoration.Underline,
@@ -447,8 +471,8 @@ fun TradingPostBody(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                        .clickable { pressedUserProfile = true },
+                        .clickable { pressedUserProfile = true }
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // user's profile image
@@ -467,50 +491,37 @@ fun TradingPostBody(
                         Text(
                             text = "${postDetails.posterID}",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White
+                            fontWeight = FontWeight.SemiBold
                         )
-                        Text(text = "주소", fontSize = 12.sp, color = Color.White)
+                        Text(text = "주소", fontSize = 12.sp)
                     }
                 }
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    color = Color(0xFF636365)
-                )
+                HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 12.dp))
 
                 TradingPostContent(postDetails)
                 Spacer(modifier = Modifier.size(16.dp))
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    color = Color(0xFF636365)
-                )
+                HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 12.dp))
             }
         }
 
         // user's other products
         item {
-            Column (
-                modifier = Modifier.padding(8.dp, 16.dp)
-            ) {
+            Column (modifier = Modifier.padding(8.dp, 16.dp)) {
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
-                        .clickable { pressedUserProfile = true },
+                        .clickable(
+                            interactionSource = null,
+                            indication = null
+                        ) { pressedUserProfile = true },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "${postDetails.posterID}님의 판매 물품",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
+                    Text(text = "${postDetails.posterID}님의 판매 물품", fontWeight = FontWeight.SemiBold)
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
                         modifier = Modifier.size(16.dp),
-                        tint = Color.White,
                         contentDescription = "other products"
                     )
                 }
@@ -557,20 +568,26 @@ fun TradingPostContent(
     ){
         Spacer(modifier = Modifier.size(16.dp))
 
-        Text(text = postDetails.title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+        Text(text = postDetails.title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.size(4.dp))
 
         Text(
-            text = "${postDetails.postDetailsTrading!!.productType} • ${getTimeLagFromNow(LocalDateTime.parse(postDetails.uploadDate))} 전",
+            text = "${postDetails.postDetailsTrading!!.productType}" +
+                    " • ${getTimeLagFromNow(LocalDateTime.parse(postDetails.uploadDate))} 전",
             fontSize = 12.sp,
             color = Color(0xFF969698)
         )
         Spacer(modifier = Modifier.size(16.dp))
 
-        Text(text = postDetails.content!!, fontSize = 16.sp, color = Color.White)
+        Text(text = postDetails.content!!, fontSize = 16.sp)
         Spacer(modifier = Modifier.size(16.dp))
 
-        Text(text = "채팅 ${postDetails.postDetailsTrading.chatCount} • 관심 ${postDetails.postDetailsTrading!!.favoriteCount} • 조회 ${postDetails.viewCount}", fontSize = 12.sp, color = Color(0xFF969698))
+        Text(text = "채팅 ${postDetails.postDetailsTrading.chatCount}" +
+                " • 관심 ${postDetails.postDetailsTrading!!.favoriteCount}" +
+                " • 조회 ${postDetails.viewCount}",
+            fontSize = 12.sp,
+            color = Color(0xFF969698)
+        )
     }
 }
 
@@ -582,7 +599,10 @@ fun PreviewOtherProduct(
     selectPostId : (Int) -> Unit
 ){
     Column (
-        modifier = modifier.clickable { selectPostId(postDetails.postID) }
+        modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null
+        ) { selectPostId(postDetails.postID) }
     ) {
         AsyncImage(
             modifier = Modifier
@@ -595,8 +615,11 @@ fun PreviewOtherProduct(
         )
         Spacer(modifier = Modifier.size(8.dp))
 
-        Text(text = postDetails.title, color = Color.White)
+        Text(text = postDetails.title)
 
-        Text(text = "${addDelimiterToPrice(postDetails.postDetailsTrading!!.productPrice.toString())}원", fontWeight = FontWeight.SemiBold, color = Color.White)
+        Text(
+            text = "${addDelimiterToPrice(postDetails.postDetailsTrading!!.productPrice.toString())}원",
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }

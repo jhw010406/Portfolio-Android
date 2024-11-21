@@ -2,7 +2,6 @@ package com.example.tradingapp.model.data.user
 
 import com.example.tradingapp.model.data.comment.CommentDetails
 import com.example.tradingapp.model.data.post.PostDetails
-import com.google.gson.annotations.Expose
 
 data class UserInformation(
     val uid : Int,

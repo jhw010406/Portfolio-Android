@@ -46,9 +46,8 @@ fun PreviewTradingPost(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { selectedPost(previewPost.postID) }
             .padding(12.dp)
-            .clickable { selectedPost(previewPost.postID) },
-        color = Color(0xFF212123)
     ) {
         Row (
             modifier = Modifier.fillMaxWidth(),
@@ -70,8 +69,7 @@ fun PreviewTradingPost(
 
             // Content
             Column (
-                modifier = Modifier
-                    .weight(2f)
+                modifier = Modifier.weight(2f)
             ) {
                 Row (
                     modifier = Modifier.fillMaxWidth(),
@@ -81,7 +79,6 @@ fun PreviewTradingPost(
                     Text(text = previewPost.title,
                         maxLines = 1,
                         fontSize = 24.sp,
-                        color = Color.White,
                         modifier = Modifier.weight(9f),
                         overflow = TextOverflow.Ellipsis
                     )
@@ -113,7 +110,6 @@ fun PreviewTradingPost(
                     maxLines = 1,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.size(4.dp))

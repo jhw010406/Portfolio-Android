@@ -1,11 +1,24 @@
 package com.example.tradingapp.utils.ui.theme
 
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+@Composable
+fun getTextFieldColors(): TextFieldColors {
+   return TextFieldDefaults.colors(
+       focusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+       unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
+       focusedContainerColor = MaterialTheme.colorScheme.surface,
+       unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+       focusedTextColor = MaterialTheme.colorScheme.onSurface,
+       unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+       cursorColor = MaterialTheme.colorScheme.onSurface,
+       unfocusedPrefixColor = Color(0xFF858C94),
+       focusedPrefixColor = MaterialTheme.colorScheme.onSurface,
+       selectionColors = TextSelectionColors(Color(0xFFFF6E1D), Color(0xC0FF9E4D))
+   )
+}

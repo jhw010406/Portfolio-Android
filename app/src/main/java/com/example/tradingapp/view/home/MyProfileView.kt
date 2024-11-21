@@ -14,12 +14,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,7 +38,7 @@ fun MyProfileView(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF212123))
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         MyProfileHeader(mainNavController = mainNavController)
 
@@ -48,11 +48,7 @@ fun MyProfileView(
 
         // my posts
         MyTradingPosts(myInformation, mainNavController)
-        HorizontalDivider(
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 0.dp),
-            color = Color(0xFF636365)
-        )
+        HorizontalDivider(thickness = 1.dp)
         Spacer(modifier = Modifier.size(16.dp))
 
         MyCommunityPosts()
@@ -61,17 +57,13 @@ fun MyProfileView(
 
 @Composable
 fun MyProfileHeader(
-    barColor : Color = Color(0xFF212123),
-    dividerColor : Color = Color(0xFF636365),
     mainNavController: NavHostController
 ){
-    Column (
-    ) {
+    Column{
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight(align = Alignment.CenterVertically),
-            color = barColor
+                .wrapContentHeight(align = Alignment.CenterVertically)
         ) {
             Row (
                 modifier = Modifier
@@ -83,7 +75,6 @@ fun MyProfileHeader(
                 Row {
                     // setting
                     Icon(painter = painterResource(id = R.drawable.outline_settings_24),
-                        tint = Color.White,
                         contentDescription = "more functions for the post",
                         modifier = Modifier
                             .size(28.dp)
@@ -94,11 +85,7 @@ fun MyProfileHeader(
                 }
             }
         }
-        HorizontalDivider(
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 0.dp),
-            color = dividerColor
-        )
+        HorizontalDivider(thickness = 1.dp)
     }
 }
 
@@ -116,25 +103,22 @@ fun MyProfileInfo(
     ) {
         Row (verticalAlignment = Alignment.CenterVertically) {
             Surface (
-                modifier = Modifier
-                    .size(36.dp),
+                modifier = Modifier.size(36.dp),
                 shape = RoundedCornerShape(100)
             ) {
 
             }
             Spacer(modifier = Modifier.size(16.dp))
 
-            Text(text = myInformation.nickname!!, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+            Text(text = myInformation.nickname!!, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         }
 
         Surface (
-            modifier = Modifier.clickable {
-
-                },
+            modifier = Modifier.clickable {},
             shape = RoundedCornerShape(10),
-            color = Color(0xFF424249)
+            color = MaterialTheme.colorScheme.secondary
         ) {
-            Text(text = "프로필 수정", fontSize = 10.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(horizontal = 12.dp), color = Color.White)
+            Text(text = "프로필 수정", fontSize = 10.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(horizontal = 12.dp), color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -144,22 +128,19 @@ fun MyTradingPosts(
     myInformation: UserInformation,
     mainNavController: NavHostController
 ) {
-    Column (
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(text = "나의 거래", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+    Column {
+        Text(text = "나의 거래", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(modifier = Modifier.size(8.dp))
 
         Row (
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { mainNavController.navigate(MainNavigationGraph.FAVORITEPOSTSLIST.name) }
-                .padding(vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(id = R.drawable.outline_favorite_border_24), tint = Color.White, contentDescription = "favorite list")
-            Text(text = " 관심목록", color = Color.White)
+            Icon(painter = painterResource(id = R.drawable.outline_favorite_border_24), contentDescription = "favorite list")
+            Text(text = " 관심목록")
         }
 
         Row (
@@ -169,11 +150,11 @@ fun MyTradingPosts(
                     mainNavController.currentBackStackEntry?.savedStateHandle?.set("user_uid", myInformation.uid)
                     mainNavController.navigate(MainNavigationGraph.USERTRADINGPOSTSLIST.name)
                 }
-                .padding(vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(id = R.drawable.outline_receipt_long_24), tint = Color.White, contentDescription = "sell list")
-            Text(text = " 판매내역", color = Color.White)
+            Icon(painter = painterResource(id = R.drawable.outline_receipt_long_24), contentDescription = "sell list")
+            Text(text = " 판매내역")
         }
 
         Row (
@@ -181,11 +162,11 @@ fun MyTradingPosts(
                 .fillMaxWidth()
                 .clickable {
                 }
-                .padding(vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(id = R.drawable.outline_shopping_bag_24), tint = Color.White, contentDescription = "buy list")
-            Text(text = " 구매내역", color = Color.White)
+            Icon(painter = painterResource(id = R.drawable.outline_shopping_bag_24), contentDescription = "buy list")
+            Text(text = " 구매내역")
         }
         Spacer(modifier = Modifier.size(12.dp))
     }
@@ -193,23 +174,19 @@ fun MyTradingPosts(
 
 @Composable
 fun MyCommunityPosts() {
-    Column (
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(text = "나의 동네생활", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+    Column {
+        Text(text = "나의 동네생활", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(modifier = Modifier.size(8.dp))
 
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                }
-                .padding(vertical = 8.dp),
+                .clickable {}
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(id = R.drawable.outline_edit_note_24), tint = Color.White, contentDescription = "my community posts")
-            Text(text = " 내 동네생활 글", color = Color.White)
+            Icon(painter = painterResource(id = R.drawable.outline_edit_note_24), contentDescription = "my community posts")
+            Text(text = " 내 동네생활 글")
         }
     }
 }

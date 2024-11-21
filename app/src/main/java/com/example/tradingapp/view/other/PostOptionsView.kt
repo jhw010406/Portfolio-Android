@@ -1,9 +1,6 @@
 package com.example.tradingapp.view.other
 
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.clickable
@@ -19,10 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,31 +24,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
-import com.example.tradingapp.model.viewmodel.home.HomeViewModel
 import com.example.tradingapp.model.viewmodel.post.deletePost
-import com.example.tradingapp.model.viewmodel.post.getSelectedPostDetails
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 object PostOptionsPanel{
     // flow를 통해 값 변경시, 해당 변수를 참조하는 변수들에 대하여 지속적으로 update
@@ -94,7 +79,12 @@ fun PostOptionsView(
 
     if (activatePostOptionsView) {
         val currentContext = LocalContext.current
-        var noticeMessage by remember { mutableStateOf<String?>(null) }
+        val basePanelColor = MaterialTheme.colorScheme.secondary
+        val panelColor = Color(
+            basePanelColor.red + 0.03f,
+            basePanelColor.green + 0.03f,
+            basePanelColor.blue + 0.03f
+        )
         var pressedModifyButton by rememberSaveable { mutableStateOf(false) }
         var pressedDeleteButton by rememberSaveable { mutableStateOf(false) }
         var closePanel by rememberSaveable { mutableStateOf(true) }
@@ -119,16 +109,15 @@ fun PostOptionsView(
                     deletePost(tag, PostOptionsPanel.postId!!) { isSuccessful ->
 
                         if (isSuccessful) {
-                            Toast.makeText(currentContext, "게시글 삭제 성공", Toast.LENGTH_SHORT).show()
+                            RootSnackbar.show("게시글 삭제 성공")
                         }
                         else {
-                            Toast(currentContext).cancel()
-                            Toast.makeText(currentContext, "게시글 삭제 실패. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                            RootSnackbar.show("게시글 삭제 실패. 다시 시도해주세요.")
                         }
                     }
                 }
                 else {
-                    Toast.makeText(currentContext, "다른 유저의 글을 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    RootSnackbar.show("다른 유저의 글을 삭제할 수 없습니다.")
                 }
             }
         }
@@ -142,7 +131,7 @@ fun PostOptionsView(
                     mainNavController.navigate(MainNavigationGraph.WRITEPOSTFORTRADING.name)
                 }
                 else {
-                    Toast.makeText(currentContext, "다른 유저의 글을 수정할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    RootSnackbar.show("다른 유저의 글을 수정할 수 없습니다.")
                 }
             }
         }
@@ -163,13 +152,12 @@ fun PostOptionsView(
                 ) { closePanel = true },
             contentAlignment = Alignment.BottomCenter
         ) {
-
             Surface (
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset { IntOffset(x = 0, y = movePanel) },
-                shape = RoundedCornerShape(10),
-                color = Color(0xFF161618)
+                shape = RoundedCornerShape(10, 10, 0, 0),
+                color = panelColor
             ) {
                 Column {
                     Spacer(modifier = Modifier.size(8.dp))
@@ -177,8 +165,7 @@ fun PostOptionsView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(10),
-                        color = Color(0xFF212123)
+                        shape = RoundedCornerShape(10)
                     ) {
                         Column {
                             Row (
@@ -189,14 +176,10 @@ fun PostOptionsView(
                                     ) { pressedModifyButton = true },
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(text = "글 수정하기", color = Color.White, modifier = Modifier.padding(vertical = 8.dp))
+                                Text(text = "글 수정하기", modifier = Modifier.padding(vertical = 8.dp))
                             }
 
-                            HorizontalDivider(
-                                thickness = 1.dp,
-                                modifier = Modifier.padding(horizontal = 12.dp),
-                                color = Color(0xFF636365)
-                            )
+                            HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 12.dp))
 
                             Row (
                                 modifier = Modifier
@@ -216,10 +199,9 @@ fun PostOptionsView(
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 4.dp)
                             .clickable { closePanel = true },
-                        shape = RoundedCornerShape(10),
-                        color = Color(0xFF212123)
+                        shape = RoundedCornerShape(10)
                     ) {
-                        Text(text = "닫기", textAlign = TextAlign.Center, color = Color.White, modifier = Modifier.padding(vertical = 8.dp))
+                        Text(text = "닫기", textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 8.dp))
                     }
                     Spacer(modifier = Modifier.size(8.dp))
                 }

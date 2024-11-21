@@ -2,7 +2,6 @@ package com.example.tradingapp.view.graph
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -32,16 +31,17 @@ import com.example.tradingapp.model.viewmodel.post.TradingPostViewModel
 import com.example.tradingapp.model.viewmodel.post.WritePostForTradingViewModel
 import com.example.tradingapp.model.viewmodel.verify.LoginViewModel
 import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
-import com.example.tradingapp.view.LoadingBar
-import com.example.tradingapp.view.LoadingView
+import com.example.tradingapp.view.other.LoadingBar
+import com.example.tradingapp.view.other.LoadingView
 import com.example.tradingapp.view.other.PostOptionsView
+import com.example.tradingapp.view.other.RootSnackbar
 import com.example.tradingapp.view.post.trading.FavoritePostsListView
 import com.example.tradingapp.view.post.trading.TradingPostView
-import com.example.tradingapp.view.verify.LoginView
-import com.example.tradingapp.view.verify.RegisterView
 import com.example.tradingapp.view.post.trading.UserPostsListView
 import com.example.tradingapp.view.post.trading.WritePostForTradingView
 import com.example.tradingapp.view.profile.SettingOptionsView
+import com.example.tradingapp.view.verify.LoginView
+import com.example.tradingapp.view.verify.RegisterView
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -180,7 +180,7 @@ fun MainNavGraph (
                 }
                 else {
                     Log.e(tag, "user data not found")
-                    Toast.makeText(currentContext, "올바르지 않은 접근입니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    RootSnackbar.show("올바르지 않은 접근입니다. 다시 시도해주세요.")
                 }
             }
             composable(route = MainNavigationGraph.FAVORITEPOSTSLIST.name){
