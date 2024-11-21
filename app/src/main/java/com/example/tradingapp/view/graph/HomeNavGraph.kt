@@ -45,7 +45,7 @@ import com.example.tradingapp.model.data.navigation.HomeBottomNavigationBarItem
 import com.example.tradingapp.model.data.navigation.HomeNavigationGraph
 import com.example.tradingapp.model.data.navigation.valueOfHomeNavigationGraph
 import com.example.tradingapp.model.data.user.UserInformation
-import com.example.tradingapp.model.viewmodel.home.HomeViewModel
+import com.example.tradingapp.viewmodel.home.HomeViewModel
 import com.example.tradingapp.view.home.ChatView
 import com.example.tradingapp.view.home.HomeView
 import com.example.tradingapp.view.home.MapView

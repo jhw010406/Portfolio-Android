@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.post
+package com.example.tradingapp.viewmodel.post
 
 import android.os.Build
 import android.util.Log

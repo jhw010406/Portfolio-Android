@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.verify
+package com.example.tradingapp.viewmodel.verify
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

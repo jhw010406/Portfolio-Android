@@ -42,9 +42,9 @@ import com.example.tradingapp.R
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.data.user.UserInformation
-import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
-import com.example.tradingapp.model.viewmodel.post.UserPostsListViewModel
-import com.example.tradingapp.model.viewmodel.post.getPostsList
+import com.example.tradingapp.viewmodel.clicklistener.MainNavGraphClickListener
+import com.example.tradingapp.viewmodel.post.UserPostsListViewModel
+import com.example.tradingapp.viewmodel.post.getPostsList
 import com.example.tradingapp.view.other.LoadingView
 
 @RequiresApi(Build.VERSION_CODES.O)

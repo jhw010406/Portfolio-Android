@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.profile
+package com.example.tradingapp.viewmodel.profile
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

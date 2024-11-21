@@ -61,9 +61,9 @@ import com.example.tradingapp.model.data.navigation.HomeNavigationGraph
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.PostCategories
 import com.example.tradingapp.model.data.user.UserInformation
-import com.example.tradingapp.model.viewmodel.clicklistener.MainNavGraphClickListener
-import com.example.tradingapp.model.viewmodel.home.HomeViewModel
-import com.example.tradingapp.model.viewmodel.post.getPostsList
+import com.example.tradingapp.viewmodel.clicklistener.MainNavGraphClickListener
+import com.example.tradingapp.viewmodel.home.HomeViewModel
+import com.example.tradingapp.viewmodel.post.getPostsList
 import com.example.tradingapp.view.other.LoadingBar
 import com.example.tradingapp.view.graph.HomeScreen
 import com.example.tradingapp.view.post.trading.PreviewTradingPost

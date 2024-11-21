@@ -54,8 +54,8 @@ import com.example.tradingapp.R
 import com.example.tradingapp.model.data.chat.Chat
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.post.PostSubject
-import com.example.tradingapp.model.viewmodel.chat.ChatViewModel
-import com.example.tradingapp.model.viewmodel.home.CommunityViewModel
+import com.example.tradingapp.viewmodel.chat.ChatViewModel
+import com.example.tradingapp.viewmodel.home.CommunityViewModel
 
 @Composable
 fun CommunityView(

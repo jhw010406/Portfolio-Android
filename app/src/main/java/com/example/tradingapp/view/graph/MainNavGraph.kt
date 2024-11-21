@@ -26,11 +26,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
-import com.example.tradingapp.model.viewmodel.home.HomeViewModel
-import com.example.tradingapp.model.viewmodel.post.TradingPostViewModel
-import com.example.tradingapp.model.viewmodel.post.WritePostForTradingViewModel
-import com.example.tradingapp.model.viewmodel.verify.LoginViewModel
-import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
+import com.example.tradingapp.viewmodel.home.HomeViewModel
+import com.example.tradingapp.viewmodel.post.TradingPostViewModel
+import com.example.tradingapp.viewmodel.post.WritePostForTradingViewModel
+import com.example.tradingapp.viewmodel.verify.LoginViewModel
+import com.example.tradingapp.viewmodel.verify.UserInformationViewModel
 import com.example.tradingapp.view.other.LoadingBar
 import com.example.tradingapp.view.other.LoadingView
 import com.example.tradingapp.view.other.PostOptionsView

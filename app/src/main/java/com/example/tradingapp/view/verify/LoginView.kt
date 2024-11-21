@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
-import com.example.tradingapp.model.viewmodel.verify.LoginViewModel
-import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
+import com.example.tradingapp.viewmodel.verify.LoginViewModel
+import com.example.tradingapp.viewmodel.verify.UserInformationViewModel
 import com.example.tradingapp.utils.ui.theme.getTextFieldColors
 import com.example.tradingapp.view.other.RootSnackbar
 

@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
-import com.example.tradingapp.model.viewmodel.post.deletePost
+import com.example.tradingapp.viewmodel.post.deletePost
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

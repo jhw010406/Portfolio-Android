@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.other
+package com.example.tradingapp.viewmodel.other
 
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract

@@ -33,6 +33,7 @@ object RootSnackbar{
         this.hide()
         message = inputMessage
         CoroutineScope(Dispatchers.Default).launch {
+            // showSnackbar를 통해 snackbar data가 생성되고, snackbarHostState에 담긴다.
             snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Indefinite)
         }
     }
