@@ -10,7 +10,6 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +31,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -51,13 +49,13 @@ import com.example.tradingapp.model.data.navigation.HomeBottomNavigationBarItem
 import com.example.tradingapp.model.data.navigation.HomeNavigationGraph
 import com.example.tradingapp.model.data.navigation.valueOfHomeNavigationGraph
 import com.example.tradingapp.model.data.user.UserInformation
-import com.example.tradingapp.viewmodel.home.HomeViewModel
 import com.example.tradingapp.view.home.ChatView
 import com.example.tradingapp.view.home.HomeView
 import com.example.tradingapp.view.home.MapView
 import com.example.tradingapp.view.home.MyProfileView
 import com.example.tradingapp.view.other.LoadingBar
 import com.example.tradingapp.view.post.community.CommunityView
+import com.example.tradingapp.viewmodel.home.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -73,8 +71,6 @@ private object NoRippleTheme : RippleTheme {
 object HomeScreen{
     private val _deactiveHomeScreen = MutableStateFlow(false)
     val deactiveHomeScreen : StateFlow<Boolean> = _deactiveHomeScreen.asStateFlow()
-    private val _deactivatedScreenAlpha = MutableStateFlow(0f)
-    val deactivedScreenAlpha : StateFlow<Float> = _deactivatedScreenAlpha.asStateFlow()
 
     fun deactive(){
         _deactiveHomeScreen.value = true
@@ -82,10 +78,6 @@ object HomeScreen{
 
     fun active(){
         _deactiveHomeScreen.value = false
-    }
-
-    fun setDeactivedScreenAlpha(alpha : Float) {
-        _deactivatedScreenAlpha.value = alpha
     }
 }
 
