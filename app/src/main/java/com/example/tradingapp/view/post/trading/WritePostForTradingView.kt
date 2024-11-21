@@ -66,10 +66,10 @@ import com.example.tradingapp.R
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.model.data.post.Image
 import com.example.tradingapp.model.data.post.PostDetails
-import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
-import com.example.tradingapp.model.viewmodel.other.selectOptimalContractForMedia
-import com.example.tradingapp.model.viewmodel.post.WritePostForTradingViewModel
-import com.example.tradingapp.model.viewmodel.post.getSelectedPostDetails
+import com.example.tradingapp.viewmodel.other.addDelimiterToPrice
+import com.example.tradingapp.viewmodel.other.selectOptimalContractForMedia
+import com.example.tradingapp.viewmodel.post.WritePostForTradingViewModel
+import com.example.tradingapp.viewmodel.post.getSelectedPostDetails
 import com.example.tradingapp.utils.ui.theme.getTextFieldColors
 import com.example.tradingapp.view.other.LoadingView
 import com.example.tradingapp.view.other.RootSnackbar

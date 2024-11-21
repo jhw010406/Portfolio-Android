@@ -30,8 +30,8 @@ import coil.compose.AsyncImage
 import com.example.tradingapp.R
 import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.user.UserInformation
-import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
-import com.example.tradingapp.model.viewmodel.post.getTimeLagFromNow
+import com.example.tradingapp.viewmodel.other.addDelimiterToPrice
+import com.example.tradingapp.viewmodel.post.getTimeLagFromNow
 import com.example.tradingapp.view.other.PostOptionsPanel
 import java.time.LocalDateTime
 

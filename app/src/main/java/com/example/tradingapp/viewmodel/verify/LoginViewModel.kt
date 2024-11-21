@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.verify
+package com.example.tradingapp.viewmodel.verify
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

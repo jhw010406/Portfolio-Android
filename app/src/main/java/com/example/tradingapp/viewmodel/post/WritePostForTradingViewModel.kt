@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.post
+package com.example.tradingapp.viewmodel.post
 
 import android.content.Context
 import android.net.Uri
@@ -18,7 +18,7 @@ import com.example.tradingapp.model.data.post.PostDetails
 import com.example.tradingapp.model.data.post.PostDetailsTrading
 import com.example.tradingapp.model.repository.ImageDataRepository
 import com.example.tradingapp.model.repository.PostDataRepository
-import com.example.tradingapp.model.viewmodel.other.addDelimiterToPrice
+import com.example.tradingapp.viewmodel.other.addDelimiterToPrice
 
 class WritePostForTradingViewModel(
     val title: MutableState<String> = mutableStateOf(""),

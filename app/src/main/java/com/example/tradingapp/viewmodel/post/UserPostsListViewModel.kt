@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.post
+package com.example.tradingapp.viewmodel.post
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.derivedStateOf

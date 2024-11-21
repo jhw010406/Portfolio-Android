@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.post
+package com.example.tradingapp.viewmodel.post
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

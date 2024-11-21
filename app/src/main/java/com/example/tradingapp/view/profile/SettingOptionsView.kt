@@ -33,7 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tradingapp.R
 import com.example.tradingapp.model.data.user.UserCertificate
-import com.example.tradingapp.model.viewmodel.profile.SettingOptionsViewModel
+import com.example.tradingapp.viewmodel.profile.SettingOptionsViewModel
 
 @Composable
 fun SettingOptionsView (

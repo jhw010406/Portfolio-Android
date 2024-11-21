@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.home
+package com.example.tradingapp.viewmodel.home
 
 import androidx.lifecycle.ViewModel
 

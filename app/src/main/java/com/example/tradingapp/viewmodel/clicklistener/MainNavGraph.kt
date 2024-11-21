@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.clicklistener
+package com.example.tradingapp.viewmodel.clicklistener
 
 import androidx.navigation.NavHostController
 

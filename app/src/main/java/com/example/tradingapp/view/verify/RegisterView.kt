@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tradingapp.model.data.navigation.HomeNavigationGraph
 import com.example.tradingapp.model.data.navigation.MainNavigationGraph
-import com.example.tradingapp.model.viewmodel.verify.LoginViewModel
-import com.example.tradingapp.model.viewmodel.verify.UserInformationViewModel
+import com.example.tradingapp.viewmodel.verify.LoginViewModel
+import com.example.tradingapp.viewmodel.verify.UserInformationViewModel
 import com.example.tradingapp.utils.ui.theme.getTextFieldColors
 
 @Composable

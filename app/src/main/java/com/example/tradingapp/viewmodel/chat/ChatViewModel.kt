@@ -1,4 +1,4 @@
-package com.example.tradingapp.model.viewmodel.chat
+package com.example.tradingapp.viewmodel.chat
 
 import androidx.lifecycle.ViewModel
 import com.example.tradingapp.model.data.chat.Chat
