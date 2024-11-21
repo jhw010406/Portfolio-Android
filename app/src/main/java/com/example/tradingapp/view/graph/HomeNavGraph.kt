@@ -10,11 +10,15 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,10 +27,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -55,6 +61,14 @@ import com.example.tradingapp.view.post.community.CommunityView
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
+private object NoRippleTheme : RippleTheme {
+    @Composable
+    override fun defaultColor() = Color.Unspecified
+
+    @Composable
+    override fun rippleAlpha(): RippleAlpha = RippleAlpha(0.0f,0.0f,0.0f,0.0f)
+}
 
 object HomeScreen{
     private val _deactiveHomeScreen = MutableStateFlow(false)
@@ -183,58 +197,60 @@ fun HomeBottomNavigationBar(
     val currentRoute = homeNavController.currentBackStackEntryAsState().value?.destination?.route
     var isCurrentView : Boolean
 
-    Column (
-        modifier = Modifier
-            .wrapContentSize()
-            .height(80.dp)
-            .drawWithContent {
-                drawContent()
-                drawRect(
-                    color = Color.Black,
-                    alpha = deactivatedScreenAlpha
-                )
-            }
-    ){
-        HorizontalDivider( thickness = (1f).dp )
-        NavigationBar (
-            modifier = Modifier.fillMaxWidth()
-        ){
-            navigationItems.forEach { item ->
-                isCurrentView = (item.route == currentRoute)
-
-                NavigationBarItem(
-                    selected = isCurrentView,
-                    onClick = {
-                        if (!isDeactivatedHomeScreen
-                            && currentRoute != null){
-
-                            if (currentRoute != item.route){
-                                getTransitionDir(getTransitionDir(currentRoute, item.route))
-                                homeNavController.popBackStack()
-                                homeNavController.navigate(item.route)
-                                // 임의 버튼과 동시 클릭한 경우를 고려
-                                HomeScreen.active()
-                            }
-                        }
-                        else { HomeScreen.active() }
-                    },
-                    icon = {
-                        if (isCurrentView){
-                            Icon(painter = painterResource(id = item.selectedIcon), tint = MaterialTheme.colorScheme.onSurface, contentDescription = item.title)
-                        }
-                        else{
-                            Icon(painter = painterResource(id = item.normalIcon), tint = MaterialTheme.colorScheme.onSurface, contentDescription = item.title)
-                        }
-                    },
-                    label = {
-                        if (isCurrentView){ Text(text = item.title, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) }
-                        else{ Text(text = item.title, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Normal) }
-                    },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = MaterialTheme.colorScheme.surface
+    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        Column (
+            modifier = Modifier
+                .wrapContentSize()
+                .height(80.dp)
+                .drawWithContent {
+                    drawContent()
+                    drawRect(
+                        color = Color.Black,
+                        alpha = deactivatedScreenAlpha
                     )
-                )
+                }
+        ){
+            HorizontalDivider( thickness = (1f).dp )
+            NavigationBar (
+                modifier = Modifier.fillMaxWidth()
+            ){
+                navigationItems.forEach { item ->
+                    isCurrentView = (item.route == currentRoute)
+
+                    NavigationBarItem(
+                        selected = isCurrentView,
+                        onClick = {
+                            if (!isDeactivatedHomeScreen
+                                && currentRoute != null){
+
+                                if (currentRoute != item.route){
+                                    getTransitionDir(getTransitionDir(currentRoute, item.route))
+                                    homeNavController.popBackStack()
+                                    homeNavController.navigate(item.route)
+                                    // 임의 버튼과 동시 클릭한 경우를 고려
+                                    HomeScreen.active()
+                                }
+                            }
+                            else { HomeScreen.active() }
+                        },
+                        icon = {
+                            if (isCurrentView){
+                                Icon(painter = painterResource(id = item.selectedIcon), tint = MaterialTheme.colorScheme.onSurface, contentDescription = item.title)
+                            }
+                            else{
+                                Icon(painter = painterResource(id = item.normalIcon), tint = MaterialTheme.colorScheme.onSurface, contentDescription = item.title)
+                            }
+                        },
+                        label = {
+                            if (isCurrentView){ Text(text = item.title, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) }
+                            else{ Text(text = item.title, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Normal) }
+                        },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = MaterialTheme.colorScheme.surface
+                        )
+                    )
+                }
             }
         }
     }
