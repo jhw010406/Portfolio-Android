@@ -23,16 +23,16 @@
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 및 하단 네비게이션바 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td align=center><image src="https://github.com/user-attachments/assets/2220a149-b9fb-4095-8d19-ec9499e5f3da" width="320"></image></td>
-          <td align=center><image src="https://github.com/user-attachments/assets/7f7482a4-70a9-4973-8ddb-cd6794bac40d" width="320"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/2220a149-b9fb-4095-8d19-ec9499e5f3da" width="50%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/7f7482a4-70a9-4973-8ddb-cd6794bac40d" width="50%"></image></td>
         </tr>
         <tr>
-          <td width="360" align=center>본 프로젝트</td>
-          <td width="360" align=center>기존 당근마켓 애플리케이션</td>
+          <td width="50%" align=center>본 프로젝트</td>
+          <td width="50%" align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
-          <td width="360", align=center>별도의 StateFlow를 추가하여,<br>둘 중 하나의 작업만 수행되도록 개선하였습니다.</td>
-          <td width="360", align=center>홈 화면의 글쓰기 버튼과<br>하단 네비게이션 아이템을 동시에 클릭할 시,<br>두 가지의 작업이 함께 수행됩니다.</td>
+          <td width="50%" align=center>별도의 StateFlow를 추가하여,<br>둘 중 하나의 작업만 수행되도록 개선하였습니다.</td>
+          <td width="50%" align=center>홈 화면의 글쓰기 버튼과<br>하단 네비게이션 아이템을 동시에 클릭할 시,<br>두 가지의 작업이 함께 수행됩니다.</td>
         </tr>
       </table>
 
