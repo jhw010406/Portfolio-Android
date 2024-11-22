@@ -1,11 +1,11 @@
 기존 대비 개선 사항
 
-<table>
+<table width="200">
         <tr>
           <td colspan="2", align=center>게시글 중복 클릭 개선</td>
         </tr>
         <tr>
-          <td width="100", align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae"></image></td>
+          <td width=50%, align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae"></image></td>
           <td width=50%, align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd"></image></td>
         </tr>
         <tr>
