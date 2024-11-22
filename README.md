@@ -1,6 +1,6 @@
 ### 기존 대비 개선 사항
 
-<table>
+<table width="480">
         <tr>
           <td colspan="2" align=center><h3>게시글 중복 클릭 개선</h3></td>
         </tr>
@@ -36,7 +36,7 @@
         </tr>
       </table>
 
-<table>
+<table width="480">
         <tr>
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 애니메이션 개선</h3></td>
         </tr>
