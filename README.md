@@ -3,16 +3,16 @@
     <td colspan="2">게시글 중복 클릭 개선</td>
   </tr>
   <tr>
-    <th>https://github.com/user-attachments/assets/11f30405-1f57-4c6b-9b79-a08bdbf4e86f</th>
-    <td></td>
+    <th width=50%>https://github.com/user-attachments/assets/11f30405-1f57-4c6b-9b79-a08bdbf4e86f</th>
+    <td width=50%></td>
   </tr>
   <tr>
     <td>본 프로젝트</td>
     <td>기존 당근마켓 애플리케이션</td>
   </tr>
   <tr>
-    <td width=50%>본 프로젝트는 별도의 StateFlow를 추가하여,한 게시글만 조회하도록 개선하였습니다. (viewmodel.clicklistener.MainNavGraph.kt)</td>
-    <td width=50%>기존 애플리케이션에선 게시글 중복 클릭 시, 선택한 모든 게시글을 조회합니다.</td>
+    <td>본 프로젝트는 별도의 StateFlow를 추가하여,한 게시글만 조회하도록 개선하였습니다. (viewmodel.clicklistener.MainNavGraph.kt)</td>
+    <td>기존 애플리케이션에선 게시글 중복 클릭 시, 선택한 모든 게시글을 조회합니다.</td>
   </tr>
 </table>
 기존 대비 개선 사항
