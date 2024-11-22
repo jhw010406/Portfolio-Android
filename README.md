@@ -22,7 +22,7 @@
         <tr>
           <td colspan="2", align=center>홈 화면 글쓰기 버튼 및 하단 네비게이션바 중복 클릭 개선</td>
         </tr>
-        <tr height=25%>
+        <tr>
           <td align=center><image src="https://github.com/user-attachments/assets/23e45c23-d452-4008-8a48-ee6e41dbfb32"></image></td>
           <td align=center><image src="https://github.com/user-attachments/assets/c195a5dd-6f90-46c8-a8fa-1bd119374cb6"></image></td>
         </tr>
