@@ -19,7 +19,7 @@
 </table>
 
 
-<table>
+<table width="600px">
   <tr>
     <td colspan="2", align=center>홈 화면 글쓰기 버튼 및 하단 네비게이션 아이템 중복 클릭 개선</td>
   </tr>
