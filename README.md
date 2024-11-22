@@ -4,7 +4,7 @@
   </tr>
   <tr>
     <td width=50%, align=center><image src="https://github.com/user-attachments/assets/11f30405-1f57-4c6b-9b79-a08bdbf4e86f"></image></td>
-    <td width=50%, align=center></td>
+    <td width=50%, align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd"></image></td>
   </tr>
   <tr>
     <td align=center>본 프로젝트</td>
@@ -16,6 +16,9 @@
   </tr>
 </table>
 기존 대비 개선 사항
+
+![Honeycam 2024-11-23 00-53-37](https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd)
+
 
 ![게시글 중복 클릭](https://github.com/user-attachments/assets/11f30405-1f57-4c6b-9b79-a08bdbf4e86f)
 기존 애플리케이션에선 게시글 중복 클릭 시, 선택한 모든 게시글을 조회합니다.
