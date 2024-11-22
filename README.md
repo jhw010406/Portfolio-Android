@@ -7,8 +7,8 @@
     <td></td>
   </tr>
   <tr>
-    <td>본 프로젝트</td>
-    <td>기존 당근마켓 애플리케이션</td>
+    <td colspan="1">본 프로젝트</td>
+    <td colspan="1">기존 당근마켓 애플리케이션</td>
   </tr>
   <tr>
     <td>본 프로젝트는 별도의 StateFlow를 추가하여,한 게시글만 조회하도록 개선하였습니다. (viewmodel.clicklistener.MainNavGraph.kt)</td>
