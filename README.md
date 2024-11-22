@@ -18,7 +18,7 @@
         </tr>
       </table>
 
-<table>
+<table width="480">
         <tr>
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 및 하단 네비게이션바 중복 클릭 개선</h3></td>
         </tr>
