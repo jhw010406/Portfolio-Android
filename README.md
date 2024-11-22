@@ -5,7 +5,7 @@
           <td colspan="2" align=center><h3>게시글 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/a30e4ecd-a881-48bb-b6bd-4dde268105af" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/89aa024b-fada-4355-ad68-4efc7796de3d" width="100%"></image></td>
           <td width="50%" align=center><image src="https://github.com/user-attachments/assets/0f50e995-87ee-417d-9e41-d08755e9b03a" width="100%"></image></td>
         </tr>
         <tr>
