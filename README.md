@@ -32,7 +32,7 @@
     <td align=center>기존 당근마켓 애플리케이션</td>
   </tr>
   <tr>
-    <td align=center>별도의 StateFlow를 추가하여, 둘 중 하나만 동작하도록 개선하였습니다. (line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
+    <td align=center>별도의 StateFlow를 추가하여,<br>둘 중 하나만 동작하도록 개선하였습니다.<br>(line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
     <td align=center>홈 화면에서 글쓰기 버튼과 하단 네비게이션 아이템 동시 클릭 시,<br>두가지의 작업이 동시에 수행됩니다.</td>
   </tr>
 </table>
@@ -51,7 +51,7 @@
     <td align=center>기존 당근마켓 애플리케이션</td>
   </tr>
   <tr>
-    <td align=center>별도의 StateFlow를 추가하여, 버튼을 새로 추가하지 않고 애니메이션이 진행될 수 있도록 개선하였습니다. (line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
+    <td align=center>별도의 StateFlow를 추가하여,<br>버튼을 새로 추가하지 않고 애니메이션이 진행될 수 있도록 개선하였습니다.<br>(line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
     <td align=center>홈 화면의 글쓰기 버튼을 클릭 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써 서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
   </tr>
 </table>
