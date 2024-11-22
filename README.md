@@ -5,8 +5,8 @@
           <td colspan="2" align=center><h3>게시글 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae" width="50%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd" width="50%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd" width="100%"></image></td>
         </tr>
         <tr>
           <td width="50%" align=center>본 프로젝트</td>
@@ -23,8 +23,8 @@
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 및 하단 네비게이션바 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/2220a149-b9fb-4095-8d19-ec9499e5f3da" width="50%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/7f7482a4-70a9-4973-8ddb-cd6794bac40d" width="50%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/2220a149-b9fb-4095-8d19-ec9499e5f3da" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/7f7482a4-70a9-4973-8ddb-cd6794bac40d" width="100%"></image></td>
         </tr>
         <tr>
           <td width="50%" align=center>본 프로젝트</td>
@@ -41,8 +41,8 @@
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 애니메이션 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae" width="50%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd" width="50%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd" width="100%"></image></td>
         </tr>
         <tr>
           <td width="50%" align=center>본 프로젝트</td>
