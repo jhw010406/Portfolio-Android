@@ -1,6 +1,6 @@
 기존 대비 개선 사항
 
-<table  style="width:600px">
+<table>
   <tr>
     <td colspan="2", align=center>게시글 중복 클릭 개선</td>
   </tr>
@@ -16,7 +16,9 @@
     <td align=center>본 프로젝트는 별도의 StateFlow를 추가하여,<br>한 게시글만 조회하도록 개선하였습니다.<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
     <td align=center>기존 애플리케이션에선 게시글 중복 클릭 시,<br>선택한 모든 게시글을 조회합니다.</td>
   </tr>
-</table><table  style="width:600px">
+</table>
+
+<table>
   <tr>
     <td colspan="2", align=center>홈 화면 글쓰기 버튼 및 하단 네비게이션 아이템 중복 클릭 개선</td>
   </tr>
@@ -32,7 +34,9 @@
     <td align=center>별도의 StateFlow를 추가하여,<br>둘 중 하나만 동작하도록 개선하였습니다.<br>(line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
     <td align=center>홈 화면에서 글쓰기 버튼과 하단 네비게이션 아이템 동시 클릭 시,<br>두가지의 작업이 동시에 수행됩니다.</td>
   </tr>
-</table><table>
+</table>
+
+<table>
   <tr>
     <td colspan="2", align=center>홈 화면 글쓰기 버튼 애니메이션 개선</td>
   </tr>
