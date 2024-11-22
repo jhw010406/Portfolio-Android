@@ -1,6 +1,6 @@
 기존 대비 개선 사항
 
-<table width="200">
+<table width="150">
         <tr>
           <td colspan="2", align=center>게시글 중복 클릭 개선</td>
         </tr>
