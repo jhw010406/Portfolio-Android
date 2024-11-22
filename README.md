@@ -11,8 +11,8 @@
     <td align=center>기존 당근마켓 애플리케이션</td>
   </tr>
   <tr>
-    <td align=center>본 프로젝트는 별도의 StateFlow를 추가하여,한 게시글만 조회하도록 개선하였습니다. (viewmodel.clicklistener.MainNavGraph.kt)</td>
-    <td align=center>기존 애플리케이션에선 게시글 중복 클릭 시, 선택한 모든 게시글을 조회합니다.</td>
+    <td align=center>본 프로젝트는 별도의 StateFlow를 추가하여,\n한 게시글만 조회하도록 개선하였습니다. (viewmodel.clicklistener.MainNavGraph.kt)</td>
+    <td align=center>기존 애플리케이션에선 게시글 중복 클릭 시,\n선택한 모든 게시글을 조회합니다.</td>
   </tr>
 </table>
 기존 대비 개선 사항
