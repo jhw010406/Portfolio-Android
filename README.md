@@ -5,18 +5,18 @@
           <td colspan="2" align=center><h3>게시글 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="" width="100%"></image></td>
-          <td width="50%" align=center><image src="" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/a30e4ecd-a881-48bb-b6bd-4dde268105af" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/0f50e995-87ee-417d-9e41-d08755e9b03a" width="100%"></image></td>
         </tr>
         <tr>
           <td width="50%" align=center>본 프로젝트</td>
           <td width="50%" align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
-          <td width="50%" align=center>별도의 StateFlow를 추가하여,<br>한 게시글만 조회하도록 개선하였습니다.</td>
+          <td width="50%" align=center>별도의 StateFlow를 추가하여,<br>한 게시글만 조회하도록 개선하였습니다.<br>이를 통해 서버에 게시글 조회를 연속으로 요청하는 것을 방지할 수 있습니다.</td>
           <td width="50%" align=center>게시글 중복 클릭 시,<br>선택한 모든 게시글을 조회합니다.</td>
         </tr>
-      </table>
+</table>
 
 <table>
         <tr>
@@ -53,4 +53,3 @@
           <td width="50%" align=center>홈 화면의 글쓰기 버튼을<br>클릭할 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써<br>서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
 </table>
-
