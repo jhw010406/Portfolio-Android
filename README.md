@@ -9,8 +9,8 @@
           <td width="240" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd"></image></td>
         </tr>
         <tr>
-          <td align=center>본 프로젝트</td>
-          <td align=center>기존 당근마켓 애플리케이션</td>
+          <td width="240" align=center>본 프로젝트</td>
+          <td width="240" align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
           <td width="240" align=center>별도의 StateFlow를 추가하여,<br>한 게시글만 조회하도록 개선하였습니다.</td>
@@ -27,8 +27,8 @@
           <td width="240", align=center><image src="https://github.com/user-attachments/assets/7f7482a4-70a9-4973-8ddb-cd6794bac40d"></image></td>
         </tr>
         <tr>
-          <td align=center>본 프로젝트</td>
-          <td align=center>기존 당근마켓 애플리케이션</td>
+          <td width="240" align=center>본 프로젝트</td>
+          <td width="240" align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
           <td width="240", align=center>별도의 StateFlow를 추가하여,<br>둘 중 하나의 작업만 수행되도록 개선하였습니다.</td>
