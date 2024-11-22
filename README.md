@@ -1,9 +1,6 @@
 기존 대비 개선 사항
 
 <table>
-  <tr>
-    <td>
-      <table>
         <tr>
           <td colspan="2", align=center>게시글 중복 클릭 개선</td>
         </tr>
@@ -20,11 +17,8 @@
           <td align=center>기존 애플리케이션에선 게시글 중복 클릭 시,<br>선택한 모든 게시글을 조회합니다.</td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <table>
+
+<table>
         <tr>
           <td colspan="2", align=center>홈 화면 글쓰기 버튼 애니메이션 개선</td>
         </tr>
@@ -41,11 +35,8 @@
           <td align=center>홈 화면의 글쓰기 버튼을 클릭 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써 서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <table>
+
+<table>
         <tr>
           <td colspan="2", align=center>홈 화면 글쓰기 버튼 애니메이션 개선</td>
         </tr>
@@ -62,6 +53,3 @@
           <td align=center>홈 화면의 글쓰기 버튼을 클릭 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써 서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
       </table>
-    </td>
-  </tr>
-</table>
