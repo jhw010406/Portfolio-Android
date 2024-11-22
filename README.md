@@ -24,7 +24,7 @@
         </tr>
         <tr>
           <td width="150", align=center><image src="https://github.com/user-attachments/assets/23e45c23-d452-4008-8a48-ee6e41dbfb32"></image></td>
-          <td width="150", align=center><image src="https://github.com/user-attachments/assets/c195a5dd-6f90-46c8-a8fa-1bd119374cb6"></image></td>
+          <td width="300", align=center><image src="https://github.com/user-attachments/assets/c195a5dd-6f90-46c8-a8fa-1bd119374cb6"></image></td>
         </tr>
         <tr>
           <td align=center>본 프로젝트</td>
