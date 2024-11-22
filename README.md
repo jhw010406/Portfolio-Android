@@ -5,8 +5,8 @@
           <td colspan="2" align=center><h3>게시글 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae" width="100%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd" width="100%"></image></td>
+          <td width="50%" align=center><image src="" width="100%"></image></td>
+          <td width="50%" align=center><image src="" width="100%"></image></td>
         </tr>
         <tr>
           <td width="50%" align=center>본 프로젝트</td>
@@ -41,15 +41,16 @@
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 애니메이션 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae" width="100%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/8f6bc67c-7dd2-4ab0-8bc1-4b92fd1062a9" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/b73d146a-1d02-429b-9aff-45c4c4d95fde" width="100%"></image></td>
         </tr>
         <tr>
           <td width="50%" align=center>본 프로젝트</td>
           <td width="50%" align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
-          <td width="50%" align=center>별도의 StateFlow를 추가하여,<br>버튼을 새로 추가하지 않고 애니메이션이 진행될 수 있도록 개선하였습니다.</td>
+          <td width="50%" align=center>별도의 StateFlow를 추가하여 버튼을 새로 추가하지 않았으며,<br>버튼 비활성화 시 반투명 검은색 바탕이 페이드 아웃 되도록 개선하였습니다.</td>
           <td width="50%" align=center>홈 화면의 글쓰기 버튼을<br>클릭할 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써<br>서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
 </table>
+
