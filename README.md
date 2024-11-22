@@ -9,7 +9,7 @@
         </tr>
         <tr>
           <td width="100", align=center><image src="https://github.com/user-attachments/assets/24cb458b-ca2b-43bf-965d-8df234e9bcae"></image></td>
-          <td width="100", align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd"></image></td>
+          <td align=center><image src="https://github.com/user-attachments/assets/c73cffdf-c1da-4dfa-af2e-a7c8268f65dd"></image></td>
         </tr>
         <tr>
           <td align=center>본 프로젝트</td>
