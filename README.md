@@ -23,16 +23,16 @@
           <td colspan="2", align=center>홈 화면 글쓰기 버튼 및 하단 네비게이션바 중복 클릭 개선</td>
         </tr>
         <tr>
-          <td align=center><image src="https://github.com/user-attachments/assets/23e45c23-d452-4008-8a48-ee6e41dbfb32" width=50%></image></td>
-          <td align=center><image src="https://github.com/user-attachments/assets/c195a5dd-6f90-46c8-a8fa-1bd119374cb6" width=50%></image></td>
+          <td align=center><image src="https://github.com/user-attachments/assets/23e45c23-d452-4008-8a48-ee6e41dbfb32" width="320"></image></td>
+          <td align=center><image src="https://github.com/user-attachments/assets/c195a5dd-6f90-46c8-a8fa-1bd119374cb6" width="320"></image></td>
         </tr>
         <tr>
           <td align=center>본 프로젝트</td>
           <td align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
-          <td width=50%, align=center>별도의 StateFlow를 추가하여,<br>버튼을 새로 추가하지 않고 애니메이션이 진행될 수 있도록 개선하였습니다.<br>(line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
-          <td width=50%, align=center>홈 화면의 글쓰기 버튼을 클릭 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여<br>애니메이션을 구현함으로써 서로 다른<br>두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
+          <td width="320", align=center>별도의 StateFlow를 추가하여,<br>버튼을 새로 추가하지 않고 애니메이션이 진행될 수 있도록 개선하였습니다.<br>(line 71 in HomeGraph.kt)<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">viewmodel/clicklistener/MainNavGraph.kt</a></td>
+          <td width="320", align=center>홈 화면의 글쓰기 버튼을 클릭 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여<br>애니메이션을 구현함으로써 서로 다른<br>두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
       </table>
 
