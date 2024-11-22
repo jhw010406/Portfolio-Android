@@ -11,7 +11,7 @@
     <td align=center>기존 당근마켓 애플리케이션</td>
   </tr>
   <tr>
-    <td align=center>본 프로젝트는 별도의 StateFlow를 추가하여,<br>한 게시글만 조회하도록 개선하였습니다.<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt</a></td>
+    <td align=center>본 프로젝트는 별도의 StateFlow를 추가하여,<br>한 게시글만 조회하도록 개선하였습니다.<br><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">MainNavGraph.kt</a></td>
     <td align=center>기존 애플리케이션에선 게시글 중복 클릭 시,<br>선택한 모든 게시글을 조회합니다.</td>
   </tr>
 </table>
