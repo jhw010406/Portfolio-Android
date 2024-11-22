@@ -1,5 +1,7 @@
 package com.example.tradingapp.view.verify
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,6 +57,10 @@ fun LoginView(
     val currentContext = LocalContext.current
     val currentStackEntry by navController.currentBackStackEntryAsState()
     val currentViewRoute = currentStackEntry?.destination?.route
+
+    BackHandler {
+        (currentContext as Activity).finish()
+    }
 
     LaunchedEffect(Unit) {
 
