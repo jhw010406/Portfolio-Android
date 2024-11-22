@@ -21,6 +21,8 @@
         </tr>
       </table>
     </td>
+  </tr>
+  <tr>
     <td>
       <table>
         <tr>
@@ -40,6 +42,8 @@
         </tr>
       </table>
     </td>
+  </tr>
+  <tr>
     <td>
       <table>
         <tr>
