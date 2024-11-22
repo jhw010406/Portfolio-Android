@@ -3,7 +3,7 @@
     <td colspan="2", align=center>게시글 중복 클릭 개선</td>
   </tr>
   <tr>
-    <th width=50%, align=center>https://github.com/user-attachments/assets/11f30405-1f57-4c6b-9b79-a08bdbf4e86f</th>
+    <image>https://github.com/user-attachments/assets/11f30405-1f57-4c6b-9b79-a08bdbf4e86f</image>
     <td width=50%, align=center></td>
   </tr>
   <tr>
