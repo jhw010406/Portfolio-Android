@@ -6,6 +6,8 @@ constraintlayout = "2.2.0-rc01"
 constraintlayoutCompose = "1.0.1"
 constraintlayoutComposeVersion = "1.1.0-beta01"
 converterGson = "2.6.4"
+coreSplashscreen = "1.0.1"
+coreSplashscreenVersion = "1.0.0-beta01"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -16,6 +18,9 @@ lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.04.01"
 loggingInterceptor = "4.9.2"
+lottie = "5.0.2"
+lottieCompose = "6.0.1"
+lottieVersion = "6.0.1"
 navigationCompose = "2.8.0"
 retrofit = "2.6.4"
 roomKtx = "2.6.1"
@@ -27,6 +32,8 @@ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-constraintlayout-compose-v110beta01 = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutComposeVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-core-splashscreen-v100beta01 = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
@@ -50,6 +57,9 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+lottie-v601 = { module = "com.airbnb.android:lottie", version.ref = "lottieVersion" }
 okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 room-compiler = { module = "androidx.room:room-compiler" }

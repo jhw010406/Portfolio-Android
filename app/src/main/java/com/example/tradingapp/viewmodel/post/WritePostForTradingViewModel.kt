@@ -166,12 +166,6 @@ class WritePostForTradingViewModel(
         callback : (Int) -> Unit
     ) {
         val requestBody = RequestBodyFromContentURI(context, inputUri)
-        var isSuccessful = true
-        var errorMessageNumber = 0
-        val errorMessages : List<String> = listOf(
-            "put image failed",
-            "get pre-signed url failed"
-        )
         val image = Image(
             0,
             requestBody.filename,
@@ -183,7 +177,6 @@ class WritePostForTradingViewModel(
             postId?:0
         )
 
-        Log.d(tag, "input URI : ${inputUri}")
         selectedImages.add(image)
         try {
             if (requestBody.contentType == null) throw Exception("file's content type is null")
@@ -194,7 +187,6 @@ class WritePostForTradingViewModel(
                 image.name,
                 image.contentType!!
             ) { getImage, getURLSucceed ->
-                Log.d(tag, "get pre signed url succeed")
 
                 if (getURLSucceed){
                     image.name = getImage!!.name
@@ -204,22 +196,17 @@ class WritePostForTradingViewModel(
 
                         if (putImageSucceed) {
                             image.loading = false
-                            Log.d(tag, "upload image succeed")
                         }
                         else{
-                            isSuccessful = false
-                            errorMessageNumber = 0
+                            selectedImages.remove(image)
+                            callback(currentImagesCount - 1)
                         }
                     }
                 }
                 else{
-                    isSuccessful = false
-                    errorMessageNumber = 1
+                    selectedImages.remove(image)
+                    callback(currentImagesCount - 1)
                 }
-            }
-
-            if (!isSuccessful){
-                throw Exception(errorMessages[errorMessageNumber])
             }
 
         } catch (e : Exception) {

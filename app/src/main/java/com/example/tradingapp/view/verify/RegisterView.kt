@@ -35,6 +35,7 @@ import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.viewmodel.verify.LoginViewModel
 import com.example.tradingapp.viewmodel.verify.UserInformationViewModel
 import com.example.tradingapp.utils.ui.theme.getTextFieldColors
+import com.example.tradingapp.view.other.RootSnackbar
 
 @Composable
 fun RegisterView(
@@ -138,28 +139,15 @@ fun RegisterView(
                                 else {
                                     isWrongInputID = 0
                                     isWrongInputPW = 0
-                                    Toast
-                                        .makeText(
-                                            currentContext,
-                                            "계정 생성 실패. 다시 시도해주세요.",
-                                            LENGTH_SHORT
-                                        )
-                                        .show()
                                 }
                             }
                         } else {
 
-                            if (CheckRightID(inputID)) {
-                                isWrongInputID = 0
-                            } else {
-                                isWrongInputID = 1
-                            }
+                            if (CheckRightID(inputID)) { isWrongInputID = 0 }
+                            else { isWrongInputID = 1 }
 
-                            if (CheckRightPW(inputPW)) {
-                                isWrongInputPW = 0
-                            } else {
-                                isWrongInputPW = 1
-                            }
+                            if (CheckRightPW(inputPW)) { isWrongInputPW = 0 }
+                            else { isWrongInputPW = 1 }
                         }
                     },
                 shape = RoundedCornerShape(12),

@@ -2,6 +2,7 @@ package com.example.tradingapp.view.graph
 
 import android.os.Build
 import android.util.Log
+import android.view.ViewTreeObserver
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -20,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,6 +44,7 @@ import com.example.tradingapp.view.post.trading.WritePostForTradingView
 import com.example.tradingapp.view.profile.SettingOptionsView
 import com.example.tradingapp.view.verify.LoginView
 import com.example.tradingapp.view.verify.RegisterView
+import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

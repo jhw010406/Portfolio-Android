@@ -10,7 +10,11 @@ import com.example.tradingapp.model.data.user.UserInformation
 import com.example.tradingapp.model.repository.local.LocalUserCertificateGraph
 import com.example.tradingapp.model.repository.local.LocalUserCertificateRepository
 import com.example.tradingapp.model.repository.UserDataRepository
+import com.example.tradingapp.view.other.RootSnackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,9 +23,10 @@ class LoginViewModel(
     private val localUserCertificateRepository : LocalUserCertificateRepository = LocalUserCertificateGraph.localUserCertificateRepository
 ) : ViewModel() {
 
-    var myCertificate : UserCertificate? = null
+    var tryAutoLogin = false
+    var myCertificate: UserCertificate? = null
 
-    suspend fun doAutoLogin(tag : String) : Boolean {
+    suspend fun doAutoLogin(tag : String = "test") : Boolean {
 
         return withContext(Dispatchers.IO){
             myCertificate = localUserCertificateRepository.getUserCertificate()?.first()
@@ -42,18 +47,26 @@ class LoginViewModel(
         keepLogin : Boolean,
         callback : (UserInformation?, Boolean) -> Unit
     ) {
-        UserDataRepository.loginUser(tag, id, password){ getUserCertificate, getUserInformation, isSuccessful ->
+        UserDataRepository.loginUser(tag, id, password){ getUserCertificate, getUserInformation, responseCode ->
 
-            if (isSuccessful) {
-                myCertificate = getUserCertificate
-                myCertificate!!.keepLogin = keepLogin
-                viewModelScope.launch {
-                    localUserCertificateRepository.insert(myCertificate!!)
+            when (responseCode / 100) {
+                2 -> {
+                    myCertificate = getUserCertificate
+                    myCertificate!!.keepLogin = keepLogin
+                    viewModelScope.launch {
+                        localUserCertificateRepository.insert(myCertificate!!)
+                    }
+                    RootSnackbar.show("로그인 성공")
+                    callback(getUserInformation, true)
                 }
-                callback(getUserInformation, true)
-            }
-            else {
-                callback(null, false)
+                4 -> {
+                    RootSnackbar.show("올바르지 않은 계정입니다.")
+                    callback(null, false)
+                }
+                else -> {
+                    RootSnackbar.show("서버 연결 실패.\n다시 시도해주세요.")
+                    callback(null, false)
+                }
             }
         }
     }
@@ -67,18 +80,25 @@ class LoginViewModel(
         UserDataRepository.RegisterUser(
             tag,
             UserCertificate(id, password, false, null, null)
-        ){ getUserCertificate, getUserInformation, isSuccessful ->
+        ){ getUserCertificate, getUserInformation, responseCode ->
 
-            if (isSuccessful) {
-                myCertificate = getUserCertificate
+            when (responseCode / 100) {
+                2 -> {
+                    myCertificate = getUserCertificate
 
-                viewModelScope.launch {
-                    localUserCertificateRepository.insert(getUserCertificate)
+                    viewModelScope.launch {
+                        localUserCertificateRepository.insert(getUserCertificate)
+                    }
+                    callback(getUserInformation, true)
                 }
-                callback(getUserInformation, true)
-            }
-            else {
-                callback(null, false)
+                4 -> {
+                    RootSnackbar.show("이미 존재하는 계정입니다.")
+                    callback(null, false)
+                }
+                else -> {
+                    RootSnackbar.show("서버 연결 실패.\n다시 시도해주세요.")
+                    callback(null, false)
+                }
             }
         }
     }

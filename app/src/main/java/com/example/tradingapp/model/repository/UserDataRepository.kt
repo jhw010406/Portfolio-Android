@@ -36,7 +36,7 @@ object UserDataRepository{
         tag : String,
         id : String,
         password : String,
-        callback : (UserCertificate, UserInformation?, Boolean) -> Unit
+        callback : (UserCertificate, UserInformation?, responseCode : Int) -> Unit
     ) {
         val userCertificate = UserCertificate(id, password, false, null, null)
         val getUserInfo = retrofit.LoginUser(userCertificate)
@@ -64,7 +64,7 @@ object UserDataRepository{
 
                     if (userCertificate.accessToken == null || userCertificate.refreshToken == null) {
                         Log.e(tag, "access token or refresh token is null")
-                        callback(userCertificate, null, false)
+                        callback(userCertificate, null, response.code())
 
                         return
                     }
@@ -74,17 +74,17 @@ object UserDataRepository{
                             "\nrefresh token : ${userCertificate.refreshToken}" +
                             "\n${response.body()}"
                     )
-                    callback(userCertificate, response.body(), true)
+                    callback(userCertificate, response.body(), response.code())
                 }
                 else{
                     Log.d(tag, "server error : ${response.code()} ${response.message()}")
-                    callback(userCertificate, null, false)
+                    callback(userCertificate, null, response.code())
                 }
             }
 
             override fun onFailure(call: Call<UserInformation>, t: Throwable) {
                 Log.e(tag, "server connect failure", t)
-                callback(userCertificate, null, false)
+                callback(userCertificate, null, 500)
             }
         })
     }
@@ -92,7 +92,7 @@ object UserDataRepository{
     fun RegisterUser(
         tag : String,
         userCertificate : UserCertificate,
-        callback: (UserCertificate, UserInformation?, Boolean) -> Unit
+        callback: (UserCertificate, UserInformation?, responseCode : Int) -> Unit
     ) {
         val createUserInfo = retrofit.RegisterUser(userCertificate)
 
@@ -116,23 +116,23 @@ object UserDataRepository{
 
                     if (userCertificate.accessToken == null || userCertificate.refreshToken == null) {
                         Log.e(tag, "access token or refresh token is null")
-                        callback(userCertificate, null, false)
+                        callback(userCertificate, null, response.code())
 
                         return
                     }
 
                     Log.d(tag, "register success | ${response.body()} | ${response.body()?.uid}")
-                    callback(userCertificate, response.body(), true)
+                    callback(userCertificate, response.body(), response.code())
                 }
                 else{
                     Log.d(tag, "error : ${response.code()} ${response.message()}")
-                    callback(userCertificate, null, false)
+                    callback(userCertificate, null, response.code())
                 }
             }
 
             override fun onFailure(call: Call<UserInformation>, t: Throwable) {
                 Log.d(tag, "server connect failure", t)
-                callback(userCertificate, null, false)
+                callback(userCertificate, null, 500)
             }
         })
     }

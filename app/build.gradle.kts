@@ -66,6 +66,9 @@ android {
 
 dependencies {
 
+    implementation(libs.lottie)
+    implementation(libs.lottie.compose)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.room.runtime)

@@ -39,6 +39,8 @@ import com.example.tradingapp.model.data.navigation.MainNavigationGraph
 import com.example.tradingapp.viewmodel.verify.LoginViewModel
 import com.example.tradingapp.viewmodel.verify.UserInformationViewModel
 import com.example.tradingapp.utils.ui.theme.getTextFieldColors
+import com.example.tradingapp.view.other.LoadingBar
+import com.example.tradingapp.view.other.LoadingView
 import com.example.tradingapp.view.other.RootSnackbar
 
 @Composable
@@ -92,7 +94,10 @@ fun LoginView(
         }
     }
 
-    if (!autoLoginSucceed){
+    if (autoLoginSucceed) {
+        LoadingView()
+    }
+    else {
         Surface (modifier = Modifier.fillMaxSize()){
             Column (
                 modifier = Modifier.fillMaxSize(),
@@ -177,7 +182,6 @@ fun LoginView(
                                 ) { getUserInformation, isSuccessful ->
 
                                     if (isSuccessful) {
-                                        RootSnackbar.show("로그인 성공")
                                         myInfo.userInfo.value = getUserInformation
                                         myInfo.userInfo.value!!.id =
                                             loginViewModel.myCertificate!!.id
@@ -191,7 +195,6 @@ fun LoginView(
                                     else {
                                         isBlankInputID = false
                                         isBlankInputPW = false
-                                        RootSnackbar.show("로그인 실패. 다시 시도해주세요.")
                                     }
                                 }
                             } else {
@@ -216,8 +219,8 @@ fun LoginView(
                 Text(
                     text = "계정이 없으신가요? 회원가입 하기",
                     modifier = Modifier.clickable {
-                            navController.navigate(MainNavigationGraph.REGISTER.name)
-                        }
+                        navController.navigate(MainNavigationGraph.REGISTER.name)
+                    }
                 )
             }
         }
