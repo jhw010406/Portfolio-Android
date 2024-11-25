@@ -11,6 +11,8 @@
 본 프로젝트는 MVVM 패턴을 따라 제작되었습니다.<br>
 <br>
 <ol>
+        <li>Architecture</li>
+        <br>
         <li>구현 사항
                 <ul>
                         <li>JWT 검증 interceptor</li>
@@ -80,8 +82,6 @@
                         <li>기존 애플리케이션 대비 UI/UX 개선</li>
                 </ul>
         </li>
-        <br>
-        <li>Architecture</li>
         <br>
         <li>Trouble Shootings</li>
 </ol>
@@ -177,7 +177,7 @@ https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
           <td align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
-          <td align=center>별도의 StateFlow를 추가하여 활용함으로써 버튼 애니메이션을 위해 별도의 composable 생성을 하지 않았으며,<br>버튼 비활성화 시 반투명 검은색 바탕이 페이드 아웃 되도록 개선하였습니다.</td>
+          <td align=center>별도의 StateFlow를 추가함으로써 버튼 애니메이션을 위해 새 composable 생성을 하지 않았으며,<br>버튼 비활성화 시 반투명 검은색 바탕이 페이드 아웃 되도록 개선하였습니다.</td>
           <td align=center>홈 화면의 글쓰기 버튼을 클릭할 시,<br>홈 화면 위에 새로운 composable와 버튼을 덧붙여 애니메이션을 구현함으로써<br>서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
 </table>
