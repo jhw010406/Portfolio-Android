@@ -20,8 +20,8 @@
                 <td width=240 align=center>다크모드 활성화 시</td>
                 <td width=240 align=center>다크모드 비활성화 시</td>
         <tr>
-                <td align=center><img src="https://github.com/user-attachments/assets/aafc4f4a-63f8-4f85-82b2-bac3330696e2" width=100%></td>
-                <td align=center><img src="https://github.com/user-attachments/assets/a8fc12e7-250c-4cd8-bc74-2e8b17ce4566" width=100%></td>
+                <td align=center><img src="https://github.com/user-attachments/assets/ca7e6eca-dffe-4e61-8985-fb4dfb2970e4" width=100%></td>
+                <td align=center><img src="https://github.com/user-attachments/assets/2a43dcb6-9f6d-49af-8278-35f6dbb98899" width=100%></td>
         </tr>
 </table>
 <br>
