@@ -3,9 +3,30 @@
         <li>구현 사항
                 <ul>
                         <li>회원가입 / 로그인 / 자동 로그인</li>
-                        <li>게시글 생성 / 조회 / 수정 / 삭제</li>
-                        <li>게시글 찜하기</li>
-                        <li>스플래시 화면</li>
+                        <li>게시글 생성 / 조회 / 수정 / 삭제
+                                <ul>
+                                        <li>게시글 생성</li>
+                                        <ul>
+                                                <li></li>
+                                        </ul>
+                                </ul>
+                                <ul>
+                                        <li>게시글 수정</li>
+                                        <ul>
+                                                <li></li>
+                                        </ul>
+                                </ul>
+                        </li>
+                        <li>게시글 찜하기
+                                <ul>
+                                        <li>다른 사람의 게시글을 찜할 수 있으며, 나의 정보에서 찜한 게시글들을 확인할 수 있습니다.</li>
+                                </ul>
+                        </li>
+                        <li>스플래시 화면
+                                <ul>
+                                        <li>애플리케이션 첫 시작 시, 애니메이션이 적용된 로고를 보여줍니다.</li>
+                                </ul>
+                        </li>
                         <li>사용자 테마별 색상 변화</li>
                         <li>기존 애플리케이션 대비 UI/UX 개선</li>
                 </ul>
@@ -13,8 +34,11 @@
         <li>Trouble Shootings</li>
 </ol>
 
+### 게시글 수정
+https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
+
+
 ### 스플래시 화면
-애플리케이션 첫 실행 시 등장하는 화면에 애니메이션을 만들어 넣었습니다.
 <table align=center>
         <tr>
                 <td width=240 align=center>다크모드 활성화 시</td>
@@ -32,12 +56,18 @@
         <tr>
                 <td width=240 align=center>다크모드 활성화 시</td>
                 <td width=240 align=center>다크모드 비활성화 시</td>
+        </tr>
         <tr>
                 <td align=center><img src="https://github.com/user-attachments/assets/ce7957dc-d827-4b38-a18d-7c07ed0600aa" width=100%></td>
                 <td align=center><img src="https://github.com/user-attachments/assets/0be60050-c109-4eae-b2be-14ddebdb9a26" width=100%></td>
         </tr>
+        <tr>
+                <td align=center><img src="https://github.com/user-attachments/assets/6537b806-4db9-4fee-a5eb-6903972d1e40" width=100%></td>
+                <td align=center><img src="https://github.com/user-attachments/assets/8c9a2fda-830b-4151-a016-cf8db0c23888" width=100%></td>
+        </tr>
 </table>
 <br>
+
 
 ### 기존 애플리케이션 대비 UI/UX 개선 사항
 
@@ -103,7 +133,11 @@
                         <li>위 수정사항들로 특정 composable에서 애니메이션 발생 시, 상위 composable의 Recomposition count를 1회로 현저히 줄어들도록 개선하였습니다.</li>
                 </ul>
         </li>
-        <li>    
+        <li>Splash Screen 중단 문제 개선
+                <ul>
+                        <li>MainActivity의 모든 구성 준비가 끝날 시, Splash Screen의 애니메이션이 전부 끝나지 않았음에도 중단되는 문제가 있었습니다.</li>
+                        <li>splashScreen.setOnExitAnimationListener에서 참조할 수 있는 SplashScreenView의 멤버 변수들을 활용하여 splash screen의 애니메이션이 종료되기 전까지 중단되지 않도록 개선하였습니다.</li>
+                </ul>
         </li>
 </ul>
 <br>
