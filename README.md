@@ -193,7 +193,7 @@ https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
         <br>
         <li>composable 연속 클릭 방지
                 <ul>
-                        <li>clickable한 composable을 빠르게 두 번 이상 클릭 시, 응답이 클릭한 수 만큼 중복으로 발생하는 문제가 있었습니다.</li>
+                        <li>clickable composable을 빠르게 두 번 이상 클릭 시, 응답이 클릭한 수 만큼 중복으로 발생하는 문제가 있었습니다.</li>
                         <li>StateFlow를 활용한 별도의 ClickListener를 생성하여, 클릭 요청은 한 번만 받을 수 있도록 개선하였습니다.</li>
                 </ul>
         </li>
