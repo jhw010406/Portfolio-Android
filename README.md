@@ -1,12 +1,17 @@
-구현 사항
-<ul>
-        <li>회원가입 / 로그인 / 자동 로그인</li>
-        <li>게시글 생성 / 조회 / 수정 / 삭제</li>
-        <li>게시글 찜하기</li>
-        <li>스플래시 화면</li>
-        <li>사용자 테마별 색상 변화</li>
-        <li><a href="https://github.com/jhw010406/carrot-market-clone-frontend?tab=readme-ov-file#%EA%B8%B0%EC%A1%B4-%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98-%EB%8C%80%EB%B9%84-ux-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD">기존 애플리케이션 대비 UX 개선</a></li>
-</ul>
+<h2>프로젝트 내용</h2>
+<ol>
+        <li>구현 사항
+                <ul>
+                        <li>회원가입 / 로그인 / 자동 로그인</li>
+                        <li>게시글 생성 / 조회 / 수정 / 삭제</li>
+                        <li>게시글 찜하기</li>
+                        <li>스플래시 화면</li>
+                        <li>사용자 테마별 색상 변화</li>
+                        <li>기존 애플리케이션 대비 UI/UX 개선</li>
+                </ul>
+        </li>
+        <li>Trouble Shootings</li>
+</ol>
 
 ### 스플래시 화면
 애플리케이션 첫 실행 시 등장하는 화면에 애니메이션을 만들어 넣었습니다.
@@ -34,20 +39,7 @@
 </table>
 <br>
 
-## Trouble Shootings
-<ul>
-        <li>UI 성능 최적화
-                <ul>
-                        <li>모든 composable의 애니메이션을 GraphicsLayer 내부에서만 일어나도록 수정하였습니다.</li>
-                        <li></li>
-                        <li>위 수정사항들로 특정 composable에서 애니메이션 발생 시, 상위 composable의 Recomposition count를 1회로 현저히 줄어들도록 개선하였습니다.</li>
-                </ul>
-        </li>
-        <li>test2</li>
-</ul>
-<br>
-
-## 기존 애플리케이션 대비 UX 개선 사항
+### 기존 애플리케이션 대비 UI/UX 개선 사항
 
 <table>
         <tr>
@@ -102,3 +94,16 @@
           <td align=center>홈 화면의 글쓰기 버튼을 클릭할 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써<br>서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
 </table>
+
+## Trouble Shootings
+<ul>
+        <li>UI 성능 최적화
+                <ul>
+                        <li>모든 composable의 애니메이션을 Modifier.graphicsLayer 내부에서만 일어나도록 하였으며, 상태에 따라 노출되던 surface composable들은 Modifier.draw로 재구성하였습니다.</li>
+                        <li>위 수정사항들로 특정 composable에서 애니메이션 발생 시, 상위 composable의 Recomposition count를 1회로 현저히 줄어들도록 개선하였습니다.</li>
+                </ul>
+        </li>
+        <li>    
+        </li>
+</ul>
+<br>
