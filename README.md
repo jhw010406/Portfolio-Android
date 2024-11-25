@@ -5,7 +5,7 @@
         <li>게시글 찜하기</li>
         <li>스플래시 화면</li>
         <li>사용자 테마별 색상 변화</li>
-        <li><a href="">기존 애플리케이션 대비 UX 개선</a></li>
+        <li><a href="https://github.com/jhw010406/carrot-market-clone-frontend?tab=readme-ov-file#%EA%B8%B0%EC%A1%B4-%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98-%EB%8C%80%EB%B9%84-ux-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD">기존 애플리케이션 대비 UX 개선</a></li>
 </ul>
 
 ### 스플래시 화면
