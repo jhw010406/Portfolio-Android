@@ -6,10 +6,10 @@
         <img src="https://img.shields.io/badge/Android Studio-34A853?style=for-the-badge&logo=androidstudio&logoColor=white">
         <img src="https://img.shields.io/badge/adobe after effects-9999FF?style=for-the-badge&logo=adobeaftereffects&logoColor=white">
 </p>
+<br>
+본 프로젝트는 MVVM 패턴 + AAC 라이브러리를 기반으로 제작되었으며, API 통신은 Retrofit2를 통해 이뤄졌습니다.
 
 <h2>프로젝트 내용</h2>
-본 프로젝트는 MVVM 패턴을 따라 제작되었습니다.<br>
-<br>
 <ol>
         <li>Architecture</li>
         <br>
@@ -193,8 +193,8 @@ https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
         <br>
         <li>composable 연속 클릭 방지
                 <ul>
-                        <li>clickable composable을 빠르게 두 번 이상 클릭 시, 응답이 클릭한 수 만큼 중복으로 발생하는 문제가 있었습니다.</li>
-                        <li>StateFlow를 활용한 별도의 ClickListener를 생성하여, 클릭 요청은 한 번만 받을 수 있도록 개선하였습니다.</li>
+                        <li>clickable composable을 빠르게 두 번 이상 클릭 시, 응답이 클릭한 수 만큼 중복으로 발생하는 문제가 있었으며, 다수의 상용 앱에서 해당 문제를 방치 중인 것으로 확인했습니다.</li>
+                        <li>본 프로젝트에선 StateFlow를 활용한 별도의 ClickListener를 생성하여, 클릭 요청은 한 번만 받을 수 있도록 개선하였습니다.</li>
                 </ul>
         </li>
         <br>
