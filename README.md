@@ -1,36 +1,71 @@
+<h2>기술 스택</h2>
+
+
 <h2>프로젝트 내용</h2>
 <ol>
         <li>구현 사항
                 <ul>
+                        <li>JWT 검증 interceptor</li>
+                                <ul>
+                                        <li>access Token이 만료되어 API로부터 401 응답을 받을 시, 자동으로 헤더에 refresh Token을 포함시켜 API에 JWT 재발급 요청합니다. JWT 재발급 성공 시, access Token과 refresh Token은 새로 갱신됩니다.</li>
+                                </ul>
+                        <br>
                         <li>회원가입 / 로그인 / 자동 로그인</li>
+                                <ul>
+                                        <li>회원가입</li>
+                                        <ul>
+                                                <li>ID와 password를 입력하여 계정 생성을 API에 요청합니다. 성공 시, JWT를 발급 받으며 Room에 저장합니다.</li>
+                                        </ul>
+                                        <li>로그인</li>
+                                        <ul>
+                                                <li>ID와 password를 입력하여 로그인을 API에 요청합니다. 성공 시, JWT를 발급 받으며 Room에 저장합니다.</li>
+                                        </ul>
+                                        <li>자동 로그인</li>
+                                        <ul>
+                                                <li>애플리케이션 첫 실행 시, Room에 저장되어 있는 계정 정보를 기반하여 로그인을 API에 자동으로 요청합니다.<br>성공 시 JWT를 발급받으며, 실패시 Room에 저장된 계정 정보가 삭제되고 Login View가 보여집니다.</li>
+                                        </ul>
+                                </ul>
+                        <br>
                         <li>게시글 생성 / 조회 / 수정 / 삭제
                                 <ul>
                                         <li>게시글 생성</li>
                                         <ul>
-                                                <li></li>
+                                                <li>이미지 업로드 시 API로부터 presigned url를 발급받으며, 해당 url로 PUT 요청을 수행하여 대용량 이미지(10MB 이상)도 트래픽 문제 없이 업로드 할 수 있습니다.</li>
+                                                <li>클라이언트에서 S3으로 이미지 업로드 요청이 성공적으로 수행된 후, 게시글 제목, 내용 등의 text 데이터를 서버에 저장 요청할 수 있도록 하였으므로, 업로드 시간차로 인한 무결성 문제가 존재하지 않습니다.</li>
+                                                <li>게시글에 이미지를 첨부한 순서가 저장되며, 게시글 조회 시 해당 순서대로 이미지를 볼 수 있습니다.</li>
                                         </ul>
                                 </ul>
                                 <ul>
                                         <li>게시글 수정</li>
                                         <ul>
-                                                <li></li>
+                                                <li>게시글 생성 View를 재활용하여 구현했습니다.</li>
+                                                <li>이미지 첨부 / 삭제로 이미지 순서를 수정할 수 있으며, 게시글 조회 시 수정된 순서가 반영됩니다.</li>
+                                                <li>게시글 수정 단계에서 변경된 이미지, 텍스트들은 수정 완료가 되기 전까지 최종 게시글 내용에 반영되지 않습니다.</li>
+                                                <li>다른 유저의 게시글은 수정 / 삭제할 수 없습니다.</li>
                                         </ul>
                                 </ul>
                         </li>
+                        <br>
                         <li>게시글 찜하기
                                 <ul>
                                         <li>다른 사람의 게시글을 찜할 수 있으며, 나의 정보에서 찜한 게시글들을 확인할 수 있습니다.</li>
                                 </ul>
                         </li>
+                        <br>
                         <li>스플래시 화면
                                 <ul>
                                         <li>애플리케이션 첫 시작 시, 애니메이션이 적용된 로고를 보여줍니다.</li>
                                 </ul>
                         </li>
+                        <br>
                         <li>사용자 테마별 색상 변화</li>
+                        <br>
                         <li>기존 애플리케이션 대비 UI/UX 개선</li>
                 </ul>
         </li>
+        <br>
+        <li>Architecture</li>
+        <br>
         <li>Trouble Shootings</li>
 </ol>
 
@@ -120,8 +155,8 @@ https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
           <td align=center>기존 당근마켓 애플리케이션</td>
         </tr>
         <tr>
-          <td align=center>별도의 StateFlow를 추가하여 활용함으로써 버튼 애니메이션을 위해 별도의 view 생성을 하지 않았으며,<br>버튼 비활성화 시 반투명 검은색 바탕이 페이드 아웃 되도록 개선하였습니다.</td>
-          <td align=center>홈 화면의 글쓰기 버튼을 클릭할 시,<br>홈 화면 위에 새로운 view와 버튼을 덧붙여 애니메이션을 구현함으로써<br>서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
+          <td align=center>별도의 StateFlow를 추가하여 활용함으로써 버튼 애니메이션을 위해 별도의 composable 생성을 하지 않았으며,<br>버튼 비활성화 시 반투명 검은색 바탕이 페이드 아웃 되도록 개선하였습니다.</td>
+          <td align=center>홈 화면의 글쓰기 버튼을 클릭할 시,<br>홈 화면 위에 새로운 composable와 버튼을 덧붙여 애니메이션을 구현함으로써<br>서로 다른 두 개의 버튼이 겹쳐보이는 모습을 보입니다.</td>
         </tr>
 </table>
 
@@ -133,10 +168,18 @@ https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
                         <li>위 수정사항들로 특정 composable에서 애니메이션 발생 시, 상위 composable의 Recomposition count를 1회로 현저히 줄어들도록 개선하였습니다.</li>
                 </ul>
         </li>
+        <br>
         <li>Splash Screen 중단 문제 개선
                 <ul>
                         <li>MainActivity의 모든 구성 준비가 끝날 시, Splash Screen의 애니메이션이 전부 끝나지 않았음에도 중단되는 문제가 있었습니다.</li>
                         <li>splashScreen.setOnExitAnimationListener에서 참조할 수 있는 SplashScreenView의 멤버 변수들을 활용하여 splash screen의 애니메이션이 종료되기 전까지 중단되지 않도록 개선하였습니다.</li>
+                </ul>
+        </li>
+        <br>
+        <li>단일 이미지 선택 시, 강제 종료 문제 해결
+                <ul>
+                        <li>단일 이미지를 선택하기 위해서 ActivityResultContracts.PickMultipleVisualMedia를 호출 할 경우, 강제종료되는 이슈가 존재합니다.</li>
+                        <li>이는 ActivityResultContracts.PickMultipleVisualMedia가 최대 이미지 선택 개수에서 1 이하의 자연수를 허용하지 않는 문제에서 강제종료가 발생하는 것이므로, rememberLauncherForActivityResult에서 람다 함수로 별도의 분기를 추가하여 단일 이미지 선택 시 ActivityResultContracts.PickVisualMedia를 호출하도록 수정하였습니다.</li>
                 </ul>
         </li>
 </ul>
