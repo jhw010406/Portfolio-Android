@@ -21,7 +21,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                                         <li>access Token이 만료되어 401 응답을 받을 시, 자동으로 헤더에 refresh Token을 포함시켜 JWT 재발급 요청합니다. JWT 재발급 성공 시, access Token과 refresh Token은 새로 갱신됩니다.</li>
                                 </ul>
                         <br>
-                        <li><a href="#회원가입/로그인/자동-로그인">회원가입 / 로그인 / 자동 로그인</a></li>
+                        <li><a href="#회원가입--로그인--자동-로그인">회원가입 / 로그인 / 자동 로그인</a></li>
                                 <ul>
                                         <li>ID와 password를 입력하여 계정 생성 / 로그인을 API에 요청합니다. 성공 시, JWT를 발급 받으며 Local에 저장합니다.</li>
                                         <li>애플리케이션 첫 실행 시, Local에 저장되어 있는 계정 정보를 기반하여 로그인을 API에 자동으로 요청합니다. 성공 시 JWT를 발급받으며, 실패시 Local에 저장된 계정 정보가 삭제되고 로그인 화면으로 이동합니다.</li>
@@ -93,7 +93,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 
 <h2>2. 구현 사항</h2>
 
-### 회원가입/로그인/자동 로그인
+### 회원가입 / 로그인 / 자동 로그인
 <table>
         <tr>
                 <td>회원가입</td>
