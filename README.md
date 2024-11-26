@@ -84,7 +84,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 </ul>
         </li>
         <br>
-        <li>Trouble Shootings</li>
+        <li><a href="#3-trouble-shootings">Trouble Shootings</a></li>
 </ol>
 
 <h2>1. Architecture</h2>
