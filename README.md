@@ -61,6 +61,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                                 <ul>
                                         <li>게시글 삭제</li>
                                         <ul>
+                                                <li>이미 삭제된 게시글을 다시 삭제할 수 없습니다.</li>
                                                 <li>다른 유저의 게시글은 삭제할 수 없습니다.</li>
                                         </ul>
                                 </ul>
