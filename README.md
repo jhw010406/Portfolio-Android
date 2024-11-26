@@ -80,7 +80,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                         <br>
                         <li><a href="#사용자-테마별-색상-변화">사용자 테마별 색상 변화</a></li>
                         <br>
-                        <li><a href="#기존-애플리케이션-대비-ui/ux-개선-사항">기존 애플리케이션 대비 UI/UX 개선</a></li>
+                        <li><a href="#기존-애플리케이션-대비-uiux-개선-사항">기존 애플리케이션 대비 UI/UX 개선</a></li>
                 </ul>
         </li>
         <br>
