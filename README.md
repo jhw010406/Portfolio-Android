@@ -89,7 +89,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 </ol>
 
 <h2>1. Architecture</h2>
-![프레젠테이션1](https://github.com/user-attachments/assets/b0c5dc5d-917f-4dba-b4b7-40cdca42b0b4)
+<img src="https://github.com/user-attachments/assets/b0c5dc5d-917f-4dba-b4b7-40cdca42b0b4" width=100%>
 
 <h2>2. 구현 사항</h2>
 
