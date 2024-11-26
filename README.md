@@ -12,9 +12,9 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 
 <h2>프로젝트 내용</h2>
 <ol>
-        <li>Architecture</li>
+        <li><a href="#1-architecture">Architecture</a></li>
         <br>
-        <li>구현 사항
+        <li><a href="#2-구현-사항">구현 사항</a>
                 <ul>
                         <li>JWT 검증 interceptor</li>
                                 <ul>
