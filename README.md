@@ -18,7 +18,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 <ul>
                         <li>JWT 검증 interceptor</li>
                                 <ul>
-                                        <li>access Token이 만료되어 API로부터 401 응답을 받을 시, 자동으로 헤더에 refresh Token을 포함시켜 API에 JWT 재발급 요청합니다. JWT 재발급 성공 시, access Token과 refresh Token은 새로 갱신됩니다.</li>
+                                        <li>access Token이 만료되어 401 응답을 받을 시, 자동으로 헤더에 refresh Token을 포함시켜 JWT 재발급 요청합니다. JWT 재발급 성공 시, access Token과 refresh Token은 새로 갱신됩니다.</li>
                                 </ul>
                         <br>
                         <li>회원가입 / 로그인 / 자동 로그인</li>
