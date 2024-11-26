@@ -49,7 +49,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                                         </ul>
                                 </ul>
                                 <ul>
-                                        <li>게시글 수정</li>
+                                        <li><a href="#게시글-수정">게시글 수정</a></li>
                                         <ul>
                                                 <li>API에 특정 id에 대한 게시글 내용을 응답받은 후, 게시글 생성 View에서 수정할 수 있습니다.</li>
                                                 <li>이미지 첨부 / 삭제로 이미지 순서를 수정할 수 있으며, 게시글 조회 시 수정된 순서가 반영됩니다.</li>
@@ -78,9 +78,9 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                                 </ul>
                         </li>
                         <br>
-                        <li>사용자 테마별 색상 변화</li>
+                        <li><a href="#사용자-테마별-색상-변화">사용자 테마별 색상 변화</a></li>
                         <br>
-                        <li>기존 애플리케이션 대비 UI/UX 개선</li>
+                        <li><a href="기존 애플리케이션 대비 UI/UX 개선 사항">기존 애플리케이션 대비 UI/UX 개선</a></li>
                 </ul>
         </li>
         <br>
