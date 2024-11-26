@@ -94,7 +94,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 <h2>2. 구현 사항</h2>
 
 ### 게시글 수정
-https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386
+<div align=center><video src="https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386"></div>
 
 
 ### 스플래시 화면
