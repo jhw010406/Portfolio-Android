@@ -7,7 +7,7 @@
         <img src="https://img.shields.io/badge/adobe after effects-9999FF?style=for-the-badge&logo=adobeaftereffects&logoColor=white">
 </p>
 <br>
-본 프로젝트는 MVVM 패턴 + AAC 라이브러리를 기반으로 제작되었으며, API 통신은 Retrofit2를 통해 이뤄졌습니다.<br>
+본 프로젝트는 MVVM 패턴 + AAC 라이브러리를 기반으로 제작되었으며, Retrofit2으로 API 통신하였습니다.<br>
 After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구현하였습니다.
 
 <h2>프로젝트 내용</h2>
