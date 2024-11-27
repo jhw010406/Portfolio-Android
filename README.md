@@ -109,7 +109,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 </table>
 
 ### 화면 전환
-![화면 전환](https://github.com/user-attachments/assets/61cbea44-97a7-4354-9632-abc380de0bfb)
+<div align=center><img src="https://github.com/user-attachments/assets/61cbea44-97a7-4354-9632-abc380de0bfb"></div>
 
 
 ### 게시글 조회
