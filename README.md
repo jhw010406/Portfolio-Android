@@ -16,7 +16,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
         <br>
         <li><a href="#2-구현-사항">구현 사항</a>
                 <ul>
-                        <li>JWT 검증 interceptor</li>
+                        <li><a target="_blank" href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/model/repository/interceptor/JwtAuthInterceptor.kt">JWT 검증 interceptor</a></li>
                                 <ul>
                                         <li>access Token이 만료되어 401 응답을 받을 시, 자동으로 헤더에 refresh Token을 포함시켜 JWT 재발급 요청합니다. JWT 재발급 성공 시, access Token과 refresh Token은 새로 갱신됩니다.</li>
                                 </ul>
@@ -68,7 +68,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                                 </ul>
                         </li>
                         <br>
-                        <li>게시글 찜하기
+                        <li><a href="#게시글-찜하기">게시글 찜하기</a></li>
                                 <ul>
                                         <li>다른 사람의 게시글을 찜하거나 취소할 수 있으며, 나의 정보에서 찜한 게시글들을 확인할 수 있습니다.</li>
                                 </ul>
@@ -124,6 +124,9 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 
 ### 게시글 수정
 <div align=center><video src="https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386"></div>
+
+### 게시글 찜하기
+![게시글 찜하기](https://github.com/user-attachments/assets/a48b2632-7760-4591-98d2-3772a1222a93)
 
 
 ### 스플래시 화면
