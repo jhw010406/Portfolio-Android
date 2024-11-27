@@ -232,7 +232,8 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
         <li>composable 연속 클릭 방지
                 <ul>
                         <li>clickable composable을 빠르게 두 번 이상 클릭 시, 응답이 클릭한 수 만큼 중복으로 발생하는 문제가 있었으며, 다수의 상용 앱에서 해당 문제를 방치 중인 것으로 확인했습니다.</li>
-                        <li>본 프로젝트에선 StateFlow를 활용한 별도의 ClickListener를 생성하여, 클릭 요청은 한 번만 받을 수 있도록 개선하였습니다.</li>
+                        <li>중복 클릭이 문제가 되는 상황은 view를 이동할 때만이라고 생각하여, 목표 navigation route와 현재 navigation route를 비교하는 방법으로 클릭 요청은 한 번만 받을 수 있도록 개선하였습니다.</li>
+                        <li><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/viewmodel/clicklistener/MainNavGraph.kt">코드 확인</li>
                 </ul>
         </li>
         <br>
