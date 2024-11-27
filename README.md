@@ -27,7 +27,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                                         <li>애플리케이션 첫 실행 시, Local에 저장되어 있는 계정 정보를 기반하여 로그인을 API에 자동으로 요청합니다. 성공 시 JWT를 발급받으며, 실패시 Local에 저장된 계정 정보가 삭제되고 로그인 화면으로 이동합니다.</li>
                                 </ul>
                         <br>
-                        <li>화면 전환</li>
+                        <li><a href="#화면-전환">화면 전환</a></li>
                                 <ul>
                                         <li>모든 View 전환은 navigation에 의해 수행됩니다.</li>
                                 </ul>
@@ -107,6 +107,10 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 <td><img src="https://github.com/user-attachments/assets/69915a7c-4a12-453f-98fe-798ce44471ba"></td>
         </tr>
 </table>
+
+### 화면 전환
+![화면 전환](https://github.com/user-attachments/assets/61cbea44-97a7-4354-9632-abc380de0bfb)
+
 
 ### 게시글 조회
 <table>
