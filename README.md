@@ -1,12 +1,14 @@
 <h2>기술 스택</h2>
 <p>
-        <img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&amp;logo=java&amp;logoColor=white">
-        <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
-        <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-        <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
-        <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white">
-        <img src="https://img.shields.io/badge/Amazon S3-6DB33F?style=for-the-badge&logo=amazons3&logoColor=white">
+        <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white">
+        <img src="https://img.shields.io/badge/Android-34A853?style=for-the-badge&logo=android&logoColor=white">
+        <img src="https://img.shields.io/badge/Jetpack Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white">
+        <img src="https://img.shields.io/badge/Android Studio-34A853?style=for-the-badge&logo=androidstudio&logoColor=white">
+        <img src="https://img.shields.io/badge/adobe after effects-9999FF?style=for-the-badge&logo=adobeaftereffects&logoColor=white">
 </p>
+<br>
+본 프로젝트는 MVVM 패턴 + AAC 라이브러리를 기반으로 제작되었으며, Retrofit2으로 API 통신하였습니다.<br>
+After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구현하였습니다.
 
 <h2>프로젝트 내용</h2>
 <ol>
