@@ -83,6 +83,12 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                         <li><a href="#사용자-테마별-색상-변화">사용자 테마별 색상 변화</a></li>
                         <br>
                         <li><a href="#기존-애플리케이션-대비-uiux-개선-사항">기존 애플리케이션 대비 UI/UX 개선</a></li>
+                        <br>
+                        <li><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/view/other/RootSnackbarView.kt">알림창</a></li>
+                                <ul>
+                                        <li>view 생명주기와 독립적인 snack bar 객체를 생성하여, 간단한 알림을 보여줄 수 있도록 하였습니다.</li>
+                                        <li>현재 보여지고 있는 snack bar를 임시 저장하여, 새 snack bar 호출 시 기존 snack bar는 바로 종료될 수 있도록 하였습니다.</li>
+                                </ul>
                 </ul>
         </li>
         <br>
