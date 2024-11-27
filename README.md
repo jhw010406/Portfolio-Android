@@ -34,16 +34,17 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                         <br>
                         <li>게시글 생성 / 조회 / 수정 / 삭제
                                 <ul>
-                                        <li>게시글 조회</li>
+                                        <li><a href="#게시글-조회">게시글 조회</a></li>
                                         <ul>
                                                 <li>게시글 목록 갱신 방법은 Pagenation을 따르며, 새로 갱신된 게시글 목록의 절반 이상을 읽을 시 API에 추가적인 게시글 목록을 자동으로 요청합니다.</li>
+                                                <li>다른 유저 또는 내가 작성한 게시글 목록을 볼 수 있습니다.</li>
                                                 <li>삭제된 게시글을 조회 시 요청 거부되며, 게시글 목록에서 해당 게시글을 제거합니다.</li>
                                         </ul>
                                 </ul>
                                 <ul>
                                         <li>게시글 생성</li>
                                         <ul>
-                                                <li>이미지 업로드 시 API로부터 presigned url를 발급받으며, 해당 url로 PUT 요청을 수행함으로써 대용량 이미지(10MB 이상)도 트래픽 문제 없이 업로드 할 수 있습니다.</li>
+                                                <li>이미지 업로드 시 presigned url를 발급받으며, 해당 url로 PUT 요청함으로써 대용량 이미지(10MB 이상)도 트래픽 문제 없이 업로드 할 수 있습니다.</li>
                                                 <li>클라이언트에서 S3으로 이미지 업로드 요청이 성공적으로 수행된 후, 게시글 제목, 내용 등의 text 데이터를 서버에 저장 요청할 수 있도록 하였으므로, 업로드 시간차로 인한 무결성 문제가 존재하지 않습니다.</li>
                                                 <li>게시글에 이미지를 첨부한 순서가 저장되며, 게시글 조회 시 해당 순서대로 이미지를 볼 수 있습니다.</li>
                                         </ul>
@@ -104,6 +105,20 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 <td><img src="https://github.com/user-attachments/assets/f4c2506d-eaf5-4fd3-879a-cd886282c455"></td>
                 <td><img src="https://github.com/user-attachments/assets/3f4379cf-3a22-47ef-b582-903f5a788251"></td>
                 <td><img src="https://github.com/user-attachments/assets/69915a7c-4a12-453f-98fe-798ce44471ba"></td>
+        </tr>
+</table>
+
+### 게시글 조회
+<table>
+        <tr align=center>
+                <td>게시글 목록 조회</td>
+                <td>내 게시글 목록 조회</td>
+                <td>유저 게시글 목록 조회</td>
+        </tr>
+        <tr>
+                <td><img src="https://github.com/user-attachments/assets/c5c54c4c-67a8-4071-a049-f6dd300b1faa"></td>
+                <td><img src="https://github.com/user-attachments/assets/d1e9067e-c78d-4812-a748-04f654cbe588"></td>
+                <td><img src="https://github.com/user-attachments/assets/8002b1ee-0afc-4f37-b6d1-c7f84231a2cd"></td>
         </tr>
 </table>
 
@@ -202,7 +217,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 <ul>
         <li>UI 성능 최적화
                 <ul>
-                        <li>모든 composable의 애니메이션을 Modifier.graphicsLayer 내부에서만 일어나도록 하였으며, 상태에 따라 노출되던 composable들은 Modifier.draw로 재구성하였습니다.</li>
+                        <li>모든 composable의 애니메이션을 Modifier.graphicsLayer 내부에서만 일어나도록 하였으며, 조건에 따라 노출되던 composable들을 Modifier.draw로 재구성하였습니다.</li>
                         <li>위 수정사항들로 특정 composable에서 애니메이션 발생 시, 상위 composable의 Recomposition count를 1회로 현저히 줄어들도록 개선하였습니다.</li>
                 </ul>
         </li>
