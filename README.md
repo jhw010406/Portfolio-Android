@@ -16,7 +16,10 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
         <br>
         <li><a href="#2-구현-사항">구현 사항</a>
                 <ul>
+                        <li><a href="#기존-애플리케이션-대비-uiux-개선-사항">기존 애플리케이션 대비 UI/UX 개선</a></li>
+                        <br>
                         <li><a href="https://github.com/jhw010406/carrot-market-clone-backend">REST api 서버</a></li>
+                        <br>
                         <li><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/model/repository/interceptor/JwtAuthInterceptor.kt" target="_blank">JWT 검증 interceptor</a></li>
                                 <ul>
                                         <li>access Token이 만료되어 401 응답을 받을 시, 자동으로 헤더에 refresh Token을 포함시켜 JWT 재발급 요청합니다. JWT 재발급 성공 시, access Token과 refresh Token은 새로 갱신됩니다.</li>
@@ -82,8 +85,6 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                         </li>
                         <br>
                         <li><a href="#사용자-테마별-색상-변화">사용자 테마별 색상 변화</a></li>
-                        <br>
-                        <li><a href="#기존-애플리케이션-대비-uiux-개선-사항">기존 애플리케이션 대비 UI/UX 개선</a></li>
                         <br>
                         <li><a href="https://github.com/jhw010406/carrot-market-clone-frontend/blob/master/app/src/main/java/com/example/tradingapp/view/other/RootSnackbarView.kt">알림창</a></li>
                                 <ul>
