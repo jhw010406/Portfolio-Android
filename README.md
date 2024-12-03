@@ -232,6 +232,7 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
 <ul>
         <li>UI 성능 최적화
                 <ul>
+                        <li>안드로이드 compose 에서는 recomposition 횟수가 ui 렌더링 성능에 영향을 줍니다. 본 프로젝트에서 버튼 애니메이션을 수행 시, 해당 버튼이 종속된 상위 composable까지 recompose를 시키는 것을 확인하였습니다.</li>
                         <li>모든 composable의 애니메이션을 Modifier.graphicsLayer 내부에서만 일어나도록 하였으며, 조건에 따라 노출되던 composable들을 Modifier.draw로 재구성하였습니다.</li>
                         <li>위 수정사항들로 특정 composable에서 애니메이션 발생 시, 상위 composable의 Recomposition count를 1회로 현저히 줄어들도록 개선하였습니다.</li>
                 </ul>
