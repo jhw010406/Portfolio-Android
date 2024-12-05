@@ -110,14 +110,14 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 <td>자동 로그인</td>
         </tr>
         <tr>
-                <td><img src="https://github.com/user-attachments/assets/f4c2506d-eaf5-4fd3-879a-cd886282c455"></td>
-                <td><img src="https://github.com/user-attachments/assets/3f4379cf-3a22-47ef-b582-903f5a788251"></td>
-                <td><img src="https://github.com/user-attachments/assets/69915a7c-4a12-453f-98fe-798ce44471ba"></td>
+                <td><img src="https://github.com/user-attachments/assets/1073d18a-0a58-4bb9-910e-b93099c7f092"></td>
+                <td><img src="https://github.com/user-attachments/assets/76ceb652-29a6-491f-a1dc-5e8a96d9f65a"></td>
+                <td><img src="https://github.com/user-attachments/assets/f7df7d8e-9d11-4a7c-a42f-5a307ff52f9e"></td>
         </tr>
 </table>
 
 ### 화면 전환
-<div align=center><img src="https://github.com/user-attachments/assets/61cbea44-97a7-4354-9632-abc380de0bfb"></div>
+<div align=center><img src="https://github.com/user-attachments/assets/564044fb-f38d-4bd7-985e-d8c95f4e445d"></div>
 
 
 ### 게시글 조회
@@ -128,17 +128,18 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 <td>유저 게시글 목록 조회</td>
         </tr>
         <tr>
-                <td><img src="https://github.com/user-attachments/assets/c5c54c4c-67a8-4071-a049-f6dd300b1faa"></td>
-                <td><img src="https://github.com/user-attachments/assets/d1e9067e-c78d-4812-a748-04f654cbe588"></td>
-                <td><img src="https://github.com/user-attachments/assets/8002b1ee-0afc-4f37-b6d1-c7f84231a2cd"></td>
+                <td><img src="https://github.com/user-attachments/assets/f6aeddcf-b606-4631-aa8f-9eca9ace9032"></td>
+                <td><img src="https://github.com/user-attachments/assets/8b3fd102-2af2-42b3-883d-2c71d51e9ce6"></td>
+                <td><img src="https://github.com/user-attachments/assets/91ef599e-2594-4178-a751-a1baf372978f"></td>
         </tr>
 </table>
 
 ### 게시글 수정
-<div align=center><video src="https://github.com/user-attachments/assets/30f11751-65ea-472c-9234-68a41adba386"></div>
+<div align=center><video src="https://github.com/user-attachments/assets/945a22d3-7353-48d8-95f6-cce74e9da754"></div>
 
 ### 게시글 찜하기
-![게시글 찜하기](https://github.com/user-attachments/assets/a48b2632-7760-4591-98d2-3772a1222a93)
+<div align=center><img src="https://github.com/user-attachments/assets/3223175a-b390-4068-9ad5-6c78c52618b2"></img></div>
+
 
 
 ### 스플래시 화면
@@ -161,8 +162,8 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
                 <td width=240 align=center>다크모드 비활성화 시</td>
         </tr>
         <tr>
-                <td align=center><img src="https://github.com/user-attachments/assets/ce7957dc-d827-4b38-a18d-7c07ed0600aa" width=100%></td>
-                <td align=center><img src="https://github.com/user-attachments/assets/0be60050-c109-4eae-b2be-14ddebdb9a26" width=100%></td>
+                <td align=center><img src="https://github.com/user-attachments/assets/45c85bc2-0cd3-40cb-a493-a35abd847c3b" width=100%></td>
+                <td align=center><img src="https://github.com/user-attachments/assets/3812d388-daff-4d56-87f5-74285d4ee966" width=100%></td>
         </tr>
         <tr>
                 <td align=center><img src="https://github.com/user-attachments/assets/6537b806-4db9-4fee-a5eb-6903972d1e40" width=100%></td>
@@ -179,8 +180,8 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
           <td colspan="2" align=center><h3>게시글 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/89aa024b-fada-4355-ad68-4efc7796de3d" width="100%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/0f50e995-87ee-417d-9e41-d08755e9b03a" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/fe0e9d41-ced2-46ab-841c-57890f471ceb"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/171ca312-1f69-4f04-94c4-79872abad6e5"></image></td>
         </tr>
         <tr>
           <td align=center>본 프로젝트</td>
@@ -197,8 +198,8 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 및 하단 네비게이션바 중복 클릭 개선</h3></td>
         </tr>
         <tr>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/2220a149-b9fb-4095-8d19-ec9499e5f3da" width="100%"></image></td>
-          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/7f7482a4-70a9-4973-8ddb-cd6794bac40d" width="100%"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/a7dc5e3b-974d-449d-8ec4-44d935fd78fa"></image></td>
+          <td width="50%" align=center><image src="https://github.com/user-attachments/assets/f482b3bd-9f7a-4159-8b53-54a3c26d9e7a"></image></td>
         </tr>
         <tr>
           <td align=center>본 프로젝트</td>
@@ -215,8 +216,8 @@ After Effects를 활용하여 splash screen의 아이콘 애니메이션을 구�
           <td colspan="2", align=center><h3>홈 화면 글쓰기 버튼 애니메이션 개선</h3></td>
         </tr>
         <tr>
-          <td width=50% align=center><image src="https://github.com/user-attachments/assets/8f6bc67c-7dd2-4ab0-8bc1-4b92fd1062a9" width="100%"></image></td>
-          <td width=50% align=center><image src="https://github.com/user-attachments/assets/b73d146a-1d02-429b-9aff-45c4c4d95fde" width="100%"></image></td>
+          <td width=50% align=center><image src="https://github.com/user-attachments/assets/db15e82d-f48a-4220-beb6-3cb1fbb165fa"></image></td>
+          <td width=50% align=center><image src="https://github.com/user-attachments/assets/f3fa69f5-88a4-45dd-bfe5-66d27eb8adf2"></image></td>
         </tr>
         <tr>
           <td align=center>본 프로젝트</td>
